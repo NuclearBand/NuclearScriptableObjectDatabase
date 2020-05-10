@@ -1,9 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using NuclearBand;
-using UnityEngine;
-
-namespace NuclearBand
+﻿namespace NuclearBand
 {
     public class Example1DataNode : DataNode
     {
