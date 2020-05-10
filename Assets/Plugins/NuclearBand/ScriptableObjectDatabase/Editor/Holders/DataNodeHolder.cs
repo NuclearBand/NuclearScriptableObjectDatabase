@@ -20,15 +20,15 @@ namespace NuclearBand
 
         protected override void Move()
         {
-            AssetDatabase.MoveAsset(ScriptableObjectDatabaseEditorWindow.Path + Path + "/" + Name + ".asset",
-                ScriptableObjectDatabaseEditorWindow.Path + tempPath + "/" + Name + ".asset");
+            AssetDatabase.MoveAsset(SODatabaseSettings.Path + Path + "/" + Name + ".asset",
+                SODatabaseSettings.Path + tempPath + "/" + Name + ".asset");
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
         }
 
         protected override void Rename()
         {
-            Debug.Log(AssetDatabase.RenameAsset(ScriptableObjectDatabaseEditorWindow.Path + Path + "/" + Name + ".asset", tempName + ".asset"));
+            Debug.Log(AssetDatabase.RenameAsset(SODatabaseSettings.Path + Path + "/" + Name + ".asset", tempName + ".asset"));
             Name = tempName;
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
@@ -36,15 +36,15 @@ namespace NuclearBand
 
         protected override void Clone()
         {
-            AssetDatabase.CopyAsset(ScriptableObjectDatabaseEditorWindow.Path + Path + "/" + Name + ".asset",
-                AssetDatabase.GenerateUniqueAssetPath(ScriptableObjectDatabaseEditorWindow.Path + Path + "/" + Name + ".asset"));
+            AssetDatabase.CopyAsset(SODatabaseSettings.Path + Path + "/" + Name + ".asset",
+                AssetDatabase.GenerateUniqueAssetPath(SODatabaseSettings.Path + Path + "/" + Name + ".asset"));
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
         }
     
         protected override void Remove()
         {
-            AssetDatabase.DeleteAsset(ScriptableObjectDatabaseEditorWindow.Path + Path + "/" + Name + ".asset");
+            AssetDatabase.DeleteAsset(SODatabaseSettings.Path + Path + "/" + Name + ".asset");
             AssetDatabase.Refresh();
         }
 

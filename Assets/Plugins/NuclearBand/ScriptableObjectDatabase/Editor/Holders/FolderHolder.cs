@@ -12,14 +12,14 @@ namespace NuclearBand
 
         protected override void Move()
         {
-            AssetDatabase.MoveAsset(ScriptableObjectDatabaseEditorWindow.Path + Path + "/" + Name, ScriptableObjectDatabaseEditorWindow.Path + tempPath + "/" + Name);
+            AssetDatabase.MoveAsset(SODatabaseSettings.Path + Path + "/" + Name, SODatabaseSettings.Path + tempPath + "/" + Name);
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
         }
 
         protected override void Rename()
         {
-            AssetDatabase.RenameAsset(ScriptableObjectDatabaseEditorWindow.Path + Path + "/" + Name, tempName);
+            AssetDatabase.RenameAsset(SODatabaseSettings.Path + Path + "/" + Name, tempName);
             Name = tempName;
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
@@ -27,15 +27,15 @@ namespace NuclearBand
 
         protected override void Clone()
         {
-            AssetDatabase.CopyAsset(ScriptableObjectDatabaseEditorWindow.Path + Path + "/" + Name,
-                AssetDatabase.GenerateUniqueAssetPath(ScriptableObjectDatabaseEditorWindow.Path + Path + "/" + Name));
+            AssetDatabase.CopyAsset(SODatabaseSettings.Path + Path + "/" + Name,
+                AssetDatabase.GenerateUniqueAssetPath(SODatabaseSettings.Path + Path + "/" + Name));
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
         }
 
         protected override void Remove()
         {
-            AssetDatabase.DeleteAsset(ScriptableObjectDatabaseEditorWindow.Path + Path + "/" + Name);
+            AssetDatabase.DeleteAsset(SODatabaseSettings.Path + Path + "/" + Name);
             AssetDatabase.Refresh();
         }
     }

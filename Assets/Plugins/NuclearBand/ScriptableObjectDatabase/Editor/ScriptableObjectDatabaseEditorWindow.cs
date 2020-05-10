@@ -12,8 +12,6 @@ namespace NuclearBand.Editor
 {
     public class ScriptableObjectDatabaseEditorWindow : OdinMenuEditorWindow
     {
-        public const string Path = "Assets/NuclearBand/ScriptableObjectDatabase/";
-    
         [MenuItem("Tools/NuclearBand/ScriptableObjectDatabase")]
         private static void Open()
         {
@@ -29,7 +27,7 @@ namespace NuclearBand.Editor
                 Config = {DrawSearchToolbar = true}
             };
 
-            AddAllAssetsAtPath(tree, Path, typeof(DataNode));
+            AddAllAssetsAtPath(tree, SODatabaseSettings.Path, typeof(DataNode));
             Texture folderIcon = (Texture2D)AssetDatabase.LoadAssetAtPath("Assets/Plugins/NuclearBand/ScriptableObjectDatabase/folderIcon.png", typeof(Texture2D));
             tree.EnumerateTree().AddIcons<FolderHolder>(x => folderIcon);
             tree.SortMenuItemsByName();
@@ -132,7 +130,7 @@ namespace NuclearBand.Editor
                     GUILayout.Label(selected.Name);
                 }
 
-                var path = Path;
+                var path = SODatabaseSettings.Path;
                 if (MenuTree.Selection.SelectedValue != null)
                     path += string.IsNullOrEmpty((MenuTree.Selection.SelectedValue as Holder).Path) ? "" : (MenuTree.Selection.SelectedValue as Holder).Path + "/";
                 if (MenuTree.Selection.SelectedValue is FolderHolder folderHolder)
