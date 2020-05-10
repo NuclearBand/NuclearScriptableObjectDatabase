@@ -1,0 +1,16 @@
+Library/*
+Assets/AssetStoreTools*
+Temp/*
+Build/*
+*.apk
+.vs/*
+*.sln
+*.csproj
+obj/*
+.idea/*
+*JetBrains*
+*DotSettings.user
+.gradle/*
+*.aab
+Logs/*
+Assets/Plugins/Sirenix*
