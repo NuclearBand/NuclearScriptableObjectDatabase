@@ -9,8 +9,8 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 597767b40ddc4b29b0474bdb7c5895dd, type: 3}
-  m_Name: New
+  m_Script: {fileID: 11500000, guid: 2ab70b6d141bd594682f49b3a6047e3d, type: 3}
+  m_Name: SODatabaseSettings
   m_EditorClassIdentifier: 
   serializationData:
     SerializedFormat: 2
@@ -21,4 +21,5 @@ MonoBehaviour:
     PrefabModificationsReferencedUnityObjects: []
     PrefabModifications: []
     SerializationNodes: []
-  Description2: 1
+  path: Assets/NuclearBand/ScriptableObjectDatabase/Resources_moved/
+  label: SODatabase

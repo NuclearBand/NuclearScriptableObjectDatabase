@@ -1,15 +1,12 @@
 ﻿#if UNITY_EDITOR
-using NuclearBand.Editor;
 using Sirenix.OdinInspector;
-using Sirenix.OdinInspector.Editor;
 using UnityEditor;
-using UnityEngine;
 
 namespace NuclearBand
 {
     public class DataNodeHolder : Holder
     {
-        [CustomValueDrawer("ShowDataNode")]
+        [InlineEditor(InlineEditorObjectFieldModes.CompletelyHidden)] 
         public DataNode DataNode;
 
         public DataNodeHolder(string path, string name, DataNode dataNode) : base(path, name)
@@ -28,7 +25,7 @@ namespace NuclearBand
 
         protected override void Rename()
         {
-            Debug.Log(AssetDatabase.RenameAsset(SODatabaseSettings.Path + Path + "/" + Name + ".asset", tempName + ".asset"));
+            AssetDatabase.RenameAsset(SODatabaseSettings.Path + Path + "/" + Name + ".asset", tempName + ".asset");
             Name = tempName;
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
@@ -46,21 +43,6 @@ namespace NuclearBand
         {
             AssetDatabase.DeleteAsset(SODatabaseSettings.Path + Path + "/" + Name + ".asset");
             AssetDatabase.Refresh();
-        }
-
-
-        static PropertyTree myObjectTree;
-        private static DataNode prevDataNode;
-        static DataNode ShowDataNode(DataNode dataNode, GUIContent label)
-        {
-            if (myObjectTree == null || prevDataNode != dataNode)
-            {
-                myObjectTree = PropertyTree.Create(dataNode);
-                prevDataNode = dataNode;
-            }
-
-            myObjectTree.Draw(false);
-            return dataNode;
         }
     }
 }

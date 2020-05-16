@@ -12,6 +12,7 @@ namespace NuclearBand.Editor
 {
     public class ScriptableObjectDatabaseEditorWindow : OdinMenuEditorWindow
     {
+        private bool inSettings = false;
         [MenuItem("Tools/NuclearBand/ScriptableObjectDatabase")]
         private static void Open()
         {
@@ -27,6 +28,13 @@ namespace NuclearBand.Editor
                 Config = {DrawSearchToolbar = true}
             };
 
+            if (SODatabaseSettings.Path == "")
+            {
+                inSettings = true;
+                tree.AddMenuItemAtPath(new HashSet<OdinMenuItem>(), "", new OdinMenuItem(tree, "Settings", SODatabaseSettings.Instance));
+                return tree;
+            }
+            
             AddAllAssetsAtPath(tree, SODatabaseSettings.Path, typeof(DataNode));
             Texture folderIcon = (Texture2D)AssetDatabase.LoadAssetAtPath("Assets/Plugins/NuclearBand/ScriptableObjectDatabase/folderIcon.png", typeof(Texture2D));
             tree.EnumerateTree().AddIcons<FolderHolder>(x => folderIcon);
@@ -37,19 +45,26 @@ namespace NuclearBand.Editor
 
         private void SelectionChanged(SelectionChangedType obj)
         {
-            switch (obj)
+            try
             {
-                case SelectionChangedType.ItemAdded:
-                    (MenuTree.Selection.SelectedValue as Holder).Select();
-                    break;
-                case SelectionChangedType.ItemRemoved:
-                    break;
-                case SelectionChangedType.SelectionCleared:
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(obj), obj, null);
+                switch (obj)
+                {
+                    case SelectionChangedType.ItemAdded:
+                        (MenuTree.Selection.SelectedValue as Holder).Select();
+                        break;
+                    case SelectionChangedType.ItemRemoved:
+                        break;
+                    case SelectionChangedType.SelectionCleared:
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException(nameof(obj), obj, null);
+                }
             }
-        
+            catch (Exception e)
+            {
+                
+            }
+
         }
 
         void AddAllAssetsAtPath(
@@ -81,7 +96,8 @@ namespace NuclearBand.Editor
                         name = str2.Substring(length + 1);
                     }
 
-                
+                    if (name == "")
+                        continue;
                     tree.AddMenuItemAtPath(odinMenuItemSet, path, new OdinMenuItem(tree, name, new FolderHolder(path, name)));
                 
                     continue;
@@ -119,6 +135,17 @@ namespace NuclearBand.Editor
 
         protected override void OnBeginDrawEditors()
         {
+            if (inSettings)
+            {
+                base.OnBeginDrawEditors();
+                if (SODatabaseSettings.Path != "")
+                {
+                    Close();
+                    Open();
+                }
+                return;
+            }
+
             var selected = MenuTree.Selection.FirstOrDefault();
             var toolbarHeight = MenuTree.Config.SearchToolbarHeight;
 
@@ -127,7 +154,8 @@ namespace NuclearBand.Editor
             {
                 if (selected != null)
                 {
-                    GUILayout.Label(selected.Name);
+                    var type = selected.Value is DataNodeHolder ? (selected.Value as DataNodeHolder).DataNode.GetType().ToString() : "Directory";
+                    GUILayout.Label(type);
                 }
 
                 var path = SODatabaseSettings.Path;

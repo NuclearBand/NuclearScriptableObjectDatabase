@@ -1,15 +1,23 @@
 ﻿#if UNITY_EDITOR
-using NuclearBand.Editor;
 using UnityEditor;
+#endif
+using System.Collections.Generic;
+using UnityEngine;
 
 namespace NuclearBand
 {
     public class FolderHolder : Holder
     {
+        [HideInInspector]
+        public Dictionary<string, DataNode> DataNodes = new Dictionary<string, DataNode>();
+        
+        [HideInInspector]
+        public Dictionary<string, FolderHolder> FolderHolders = new Dictionary<string, FolderHolder>();
+            
         public FolderHolder(string path, string name) : base(path, name)
         {
         }
-
+#if UNITY_EDITOR
         protected override void Move()
         {
             AssetDatabase.MoveAsset(SODatabaseSettings.Path + Path + "/" + Name, SODatabaseSettings.Path + tempPath + "/" + Name);
@@ -38,6 +46,7 @@ namespace NuclearBand
             AssetDatabase.DeleteAsset(SODatabaseSettings.Path + Path + "/" + Name);
             AssetDatabase.Refresh();
         }
+#endif
+
     }
 }
-#endif

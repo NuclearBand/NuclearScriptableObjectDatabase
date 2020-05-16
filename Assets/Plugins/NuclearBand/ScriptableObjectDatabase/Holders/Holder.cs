@@ -1,4 +1,3 @@
-#if UNITY_EDITOR
 using Sirenix.OdinInspector;
 using UnityEngine;
 
@@ -6,6 +5,7 @@ namespace NuclearBand
 {
     public abstract class Holder
     {
+#if UNITY_EDITOR
         [HideInInspector]
         public string Path;
         [HideInInspector]
@@ -38,6 +38,6 @@ namespace NuclearBand
         protected abstract void Clone();
         [Button]
         protected abstract void Remove();
+#endif
     }
 }
-#endif
