@@ -1,0 +1,30 @@
+{
+  "name": "com.nuclearband.sodatabase",
+  "displayName": "Scriptable Objest database",
+  "version": "1.0.0",
+  "dependencies": {},
+  "author": {
+    "name": "Tr0sT",
+    "url": "https://github.com/Tr0sT"
+  },
+  "keywords": [
+    "tools",
+    "utilities",
+    "library",
+    "windowsmanager",
+    "nuclearband"
+  ],
+  "dependencies": {
+    "com.unity.addressables": "1.7.5"
+  },
+  "repository": "https://github.com/Tr0sT/UnityScriptableObjectDatabase.git#upm",
+  "license": "MIT",
+  "samples": [
+    {
+      "displayName": "Simple example",
+      "description": "",
+      "path": "Samples~/Sample"
+    }
+  ],
+  "type": "library"
+}

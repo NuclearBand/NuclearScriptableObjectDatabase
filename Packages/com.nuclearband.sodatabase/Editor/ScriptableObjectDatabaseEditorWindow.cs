@@ -36,7 +36,7 @@ namespace NuclearBand.Editor
             }
             
             AddAllAssetsAtPath(tree, SODatabaseSettings.Path, typeof(DataNode));
-            Texture folderIcon = (Texture2D)AssetDatabase.LoadAssetAtPath("Assets/Plugins/NuclearBand/ScriptableObjectDatabase/folderIcon.png", typeof(Texture2D));
+            Texture folderIcon = (Texture2D)AssetDatabase.LoadAssetAtPath("Packages/com.nuclearband.sodatabase/Editor/folderIcon.png", typeof(Texture2D));
             tree.EnumerateTree().AddIcons<FolderHolder>(x => folderIcon);
             tree.SortMenuItemsByName();
             tree.Selection.SelectionChanged += SelectionChanged;
