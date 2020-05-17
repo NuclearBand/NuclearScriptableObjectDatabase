@@ -13,6 +13,7 @@ namespace NuclearBand.Editor
     public class ScriptableObjectDatabaseEditorWindow : OdinMenuEditorWindow
     {
         private bool inSettings = false;
+
         [MenuItem("Tools/NuclearBand/ScriptableObjectDatabase")]
         private static void Open()
         {
@@ -34,9 +35,9 @@ namespace NuclearBand.Editor
                 tree.AddMenuItemAtPath(new HashSet<OdinMenuItem>(), "", new OdinMenuItem(tree, "Settings", SODatabaseSettings.Instance));
                 return tree;
             }
-            
+
             AddAllAssetsAtPath(tree, SODatabaseSettings.Path, typeof(DataNode));
-            Texture folderIcon = (Texture2D)AssetDatabase.LoadAssetAtPath("Packages/com.nuclearband.sodatabase/Editor/folderIcon.png", typeof(Texture2D));
+            Texture folderIcon = (Texture2D) AssetDatabase.LoadAssetAtPath("Packages/com.nuclearband.sodatabase/Editor/folderIcon.png", typeof(Texture2D));
             tree.EnumerateTree().AddIcons<FolderHolder>(x => folderIcon);
             tree.SortMenuItemsByName();
             tree.Selection.SelectionChanged += SelectionChanged;
@@ -45,26 +46,18 @@ namespace NuclearBand.Editor
 
         private void SelectionChanged(SelectionChangedType obj)
         {
-            try
+            switch (obj)
             {
-                switch (obj)
-                {
-                    case SelectionChangedType.ItemAdded:
-                        (MenuTree.Selection.SelectedValue as Holder).Select();
-                        break;
-                    case SelectionChangedType.ItemRemoved:
-                        break;
-                    case SelectionChangedType.SelectionCleared:
-                        break;
-                    default:
-                        throw new ArgumentOutOfRangeException(nameof(obj), obj, null);
-                }
+                case SelectionChangedType.ItemAdded:
+                    (MenuTree.Selection.SelectedValue as Holder).Select();
+                    break;
+                case SelectionChangedType.ItemRemoved:
+                    break;
+                case SelectionChangedType.SelectionCleared:
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(obj), obj, null);
             }
-            catch (Exception e)
-            {
-                
-            }
-
         }
 
         void AddAllAssetsAtPath(
@@ -73,6 +66,7 @@ namespace NuclearBand.Editor
             Type type)
         {
             var strings = AssetDatabase.GetAllAssetPaths().Where(x => x.StartsWith(assetFolderPath, StringComparison.InvariantCultureIgnoreCase));
+
             var odinMenuItemSet = new HashSet<OdinMenuItem>();
             foreach (var str1 in strings)
             {
@@ -99,7 +93,7 @@ namespace NuclearBand.Editor
                     if (name == "")
                         continue;
                     tree.AddMenuItemAtPath(odinMenuItemSet, path, new OdinMenuItem(tree, name, new FolderHolder(path, name)));
-                
+
                     continue;
                 }
 
@@ -120,12 +114,14 @@ namespace NuclearBand.Editor
         private static void SplitMenuPath(string menuPath, out string path, out string name)
         {
             menuPath = menuPath.Trim('/');
+
             int length = menuPath.LastIndexOf('/');
             if (length == -1)
             {
                 path = "";
                 name = menuPath;
             }
+
             else
             {
                 path = menuPath.Substring(0, length);
@@ -143,6 +139,7 @@ namespace NuclearBand.Editor
                     Close();
                     Open();
                 }
+
                 return;
             }
 
@@ -176,7 +173,7 @@ namespace NuclearBand.Editor
                 {
                     var uniqName = AssetDatabase.GenerateUniqueAssetPath(path + "/" + "New");
                     uniqName = uniqName.Substring(uniqName.LastIndexOf('/') + 1);
-                
+
                     AssetDatabase.CreateFolder(path, uniqName);
                     AssetDatabase.Refresh();
                 }
