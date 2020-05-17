@@ -13,11 +13,17 @@ namespace NuclearBand
         
         [HideInInspector]
         public Dictionary<string, FolderHolder> FolderHolders = new Dictionary<string, FolderHolder>();
+
+        public FolderHolder() : base()
+        {
             
+        }
+        
+#if UNITY_EDITOR
         public FolderHolder(string path, string name) : base(path, name)
         {
         }
-#if UNITY_EDITOR
+
         protected override void Move()
         {
             AssetDatabase.MoveAsset(SODatabaseSettings.Path + Path + "/" + Name, SODatabaseSettings.Path + tempPath + "/" + Name);
