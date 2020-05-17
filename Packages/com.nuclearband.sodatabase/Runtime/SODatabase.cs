@@ -11,11 +11,12 @@ namespace NuclearBand
 {
     public static class SODatabase
     {
-        private static FolderHolder root; 
-        
+        private static FolderHolder root;
+
         public static async Task Init(Action<float> onProgress, Action onComplete)
         {
             var loadHandler = Addressables.LoadResourceLocationsAsync(SODatabaseSettings.Label);
+#pragma warning disable 4014
             Task.Run(async () =>
             {
                 while (!loadHandler.IsDone)
@@ -26,8 +27,9 @@ namespace NuclearBand
 
                 onProgress?.Invoke(loadHandler.PercentComplete);
             });
+#pragma warning restore 4014
             var resourceLocations = await loadHandler.Task;
-            
+
             var loadTasks = resourceLocations.ToDictionary(resourceLocation => resourceLocation.PrimaryKey.Substring(SODatabaseSettings.Label.Length + 1), resourceLocation => Addressables.LoadAssetAsync<DataNode>(resourceLocation).Task);
             await Task.WhenAll(loadTasks.Values);
             root = new FolderHolder("", "");
@@ -76,7 +78,5 @@ namespace NuclearBand
 #if UNITY_EDITOR
         public static T GetModelForEdit<T>(string path) where T : DataNode => AssetDatabase.LoadAssetAtPath(SODatabaseSettings.Path + path + ".asset", typeof(T)) as T;
 #endif
-
     }
 }
-
