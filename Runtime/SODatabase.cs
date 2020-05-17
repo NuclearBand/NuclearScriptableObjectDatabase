@@ -32,7 +32,7 @@ namespace NuclearBand
 
             var loadTasks = resourceLocations.ToDictionary(resourceLocation => resourceLocation.PrimaryKey.Substring(SODatabaseSettings.Label.Length + 1), resourceLocation => Addressables.LoadAssetAsync<DataNode>(resourceLocation).Task);
             await Task.WhenAll(loadTasks.Values);
-            root = new FolderHolder("", "");
+            root = new FolderHolder();
             foreach (var loadTask in loadTasks)
             {
                 //SODatabase/Example1Folder/Example1.asset
@@ -41,7 +41,7 @@ namespace NuclearBand
                 for (var i = 0; i < pathElements.Length - 1; i++)
                 {
                     if (!curFolder.FolderHolders.ContainsKey(pathElements[i]))
-                        curFolder.FolderHolders.Add(pathElements[i], new FolderHolder("", ""));
+                        curFolder.FolderHolders.Add(pathElements[i], new FolderHolder());
 
                     curFolder = curFolder.FolderHolders[pathElements[i]];
                 }

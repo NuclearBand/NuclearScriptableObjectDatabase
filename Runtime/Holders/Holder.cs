@@ -5,6 +5,10 @@ namespace NuclearBand
 {
     public abstract class Holder
     {
+        public Holder()
+        {
+            
+        }
 #if UNITY_EDITOR
         [HideInInspector]
         public string Path;
