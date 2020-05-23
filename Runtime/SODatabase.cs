@@ -74,9 +74,5 @@ namespace NuclearBand
 
             return curFolder.DataNodes.Values.OfType<T>().ToList();
         }
-
-#if UNITY_EDITOR
-        public static T GetModelForEdit<T>(string path) where T : DataNode => AssetDatabase.LoadAssetAtPath(SODatabaseSettings.Path + path + ".asset", typeof(T)) as T;
-#endif
     }
 }
