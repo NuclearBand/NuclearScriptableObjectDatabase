@@ -19,6 +19,11 @@ namespace NuclearBand.Editor
         {
             var window = GetWindow<ScriptableObjectDatabaseEditorWindow>();
             window.position = GUIHelper.GetEditorWindowRect().AlignCenter(800, 500);
+            window.OnClose += () =>
+            {
+                AssetDatabase.SaveAssets();
+                AssetDatabase.Refresh();
+            };
         }
 
         protected override OdinMenuTree BuildMenuTree()
@@ -59,7 +64,7 @@ namespace NuclearBand.Editor
                     throw new ArgumentOutOfRangeException(nameof(obj), obj, null);
             }
         }
-
+        
         void AddAllAssetsAtPath(
             OdinMenuTree tree,
             string assetFolderPath,

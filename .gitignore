@@ -13,4 +13,4 @@ obj/*
 .gradle/*
 *.aab
 Logs/*
-Assets/Plugins/Sirenix*
+Assets/*
