@@ -1,6 +1,7 @@
 {
   "tagFormat": "v${version}",
   "plugins": [
+    "@semantic-release/github",
     ["@semantic-release/commit-analyzer", { "preset": "angular" }],
     "@semantic-release/release-notes-generator",
     ["@semantic-release/changelog", {
@@ -11,6 +12,8 @@
       "assets": ["Packages/com.nuclearband.sodatabase/package.json", "Packages/ccom.nuclearband.sodatabase/CHANGELOG.md"],
       "message": "chore(release): ${nextRelease.version} [skip ci]\n\n${nextRelease.notes}"
     }],
-    "@semantic-release/github"
+    ["@semantic-release/exec", {
+      "publishCmd": "./publish_upm.sh upm ${nextRelease.version}"
+    }]
   ]
 }
