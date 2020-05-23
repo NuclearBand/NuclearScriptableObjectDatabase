@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using UnityEngine;
 using UnityEngine.AddressableAssets;
 
 namespace NuclearBand
@@ -50,7 +51,6 @@ namespace NuclearBand
                 dataNodeName = dataNodeName.Substring(0, dataNodeName.IndexOf(".asset", StringComparison.Ordinal));
                 curFolder.DataNodes.Add(dataNodeName, loadTask.Value.Result);
             }
-
             onComplete?.Invoke();
         }
 
@@ -73,6 +73,11 @@ namespace NuclearBand
                 curFolder = curFolder.FolderHolders[pathElements[i]];
 
             return curFolder.DataNodes.Values.OfType<T>().ToList();
+        }
+
+        public static string Save()
+        {
+            return "";
         }
     }
 }
