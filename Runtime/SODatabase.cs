@@ -77,7 +77,13 @@ namespace NuclearBand
 
         public static string Save()
         {
+            
             return "";
+        }
+
+        public static void Load()
+        {
+            
         }
     }
 }
