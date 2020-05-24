@@ -9,7 +9,7 @@
     }],
     ["@semantic-release/npm", { "npmPublish": false, "pkgRoot": "Packages/com.nuclearband.sodatabase" }],
     ["@semantic-release/git", {
-      "assets": ["Packages/com.nuclearband.sodatabase/package.json", "Packages/ccom.nuclearband.sodatabase/CHANGELOG.md"],
+      "assets": ["Packages/com.nuclearband.sodatabase/package.json", "Packages/com.nuclearband.sodatabase/CHANGELOG.md"],
       "message": "chore(release): ${nextRelease.version} [skip ci]\n\n${nextRelease.notes}"
     }],
     ["@semantic-release/exec", {

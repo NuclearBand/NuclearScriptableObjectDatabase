@@ -1,4 +1,6 @@
 #if UNITY_EDITOR
+using System.Collections.Generic;
+using System.Linq;
 using UnityEditor;
 using UnityEngine;
 
@@ -9,6 +11,13 @@ namespace NuclearBand
         public static T GetModelForEdit<T>(string path) where T : DataNode
         {
             return AssetDatabase.LoadAssetAtPath(SODatabaseSettings.Path + path + ".asset", typeof(T)) as T;
+        }
+
+        public static List<T> GetModelsForEdit<T>(string path) where T : DataNode
+        {
+            var modelGUIDs = AssetDatabase.FindAssets($"t:{typeof(T).Name}",new [] {SODatabaseSettings.Path + path});
+
+            return modelGUIDs.Select(model => AssetDatabase.LoadAssetAtPath<T>(AssetDatabase.GUIDToAssetPath(model))).ToList();
         }
 
         public static void CreateFolder(string path)
