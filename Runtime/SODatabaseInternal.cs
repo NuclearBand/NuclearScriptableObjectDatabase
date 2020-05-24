@@ -41,14 +41,13 @@ namespace NuclearBand
 
         public static T CreateModel<T>(string path, string name) where T : DataNode
         {
-            var fullPath = SODatabaseSettings.Path + path + "/" + name;
-            
-            var model = GetModelForEdit<T>(fullPath);
+            var model = GetModelForEdit<T>(path + "/" + name);
             if (model != null)
                 return model;
             
             CreateFolder(path);
             var obj = ScriptableObject.CreateInstance(typeof(T)) as T;
+            var fullPath = SODatabaseSettings.Path + path + "/" + name;
             AssetDatabase.CreateAsset(obj, fullPath + ".asset");
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
