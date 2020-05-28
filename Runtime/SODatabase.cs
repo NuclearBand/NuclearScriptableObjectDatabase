@@ -31,7 +31,7 @@ namespace NuclearBand
 #pragma warning restore 4014
             var resourceLocations = await loadHandler.Task;
 
-            var loadTasks = resourceLocations.ToDictionary(resourceLocation => resourceLocation.PrimaryKey.Substring(SODatabaseSettings.Path.Length + 1), resourceLocation => Addressables.LoadAssetAsync<DataNode>(resourceLocation).Task);
+            var loadTasks = resourceLocations.ToDictionary(resourceLocation => resourceLocation.PrimaryKey.Substring(SODatabaseSettings.Path.Length), resourceLocation => Addressables.LoadAssetAsync<DataNode>(resourceLocation).Task);
             await Task.WhenAll(loadTasks.Values);
             root = new FolderHolder();
             foreach (var loadTask in loadTasks)
