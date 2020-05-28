@@ -1,3 +1,10 @@
+## [1.5.2](https://github.com/NuclearBand/UnityScriptableObjectDatabase/compare/v1.5.1...v1.5.2) (2020-05-28)
+
+
+### Bug Fixes
+
+* sodatabase.init fix ([e063bf2](https://github.com/NuclearBand/UnityScriptableObjectDatabase/commit/e063bf25427918c9a889730c470b9499be8c0e76))
+
 ## [1.5.1](https://github.com/Tr0sT/UnityScriptableObjectDatabase/compare/v1.5.0...v1.5.1) (2020-05-24)
 
 
