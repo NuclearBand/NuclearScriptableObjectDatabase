@@ -1,6 +1,6 @@
 {
   "name": "com.nuclearband.sodatabase",
-  "displayName": "Scriptable Objest database",
+  "displayName": "Scriptable Objeсt database",
   "version": "1.5.3",
   "dependencies": {
     "com.unity.addressables": "1.7.5"
