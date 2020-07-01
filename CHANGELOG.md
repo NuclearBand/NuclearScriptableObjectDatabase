@@ -1,3 +1,10 @@
+# [1.6.0](https://github.com/NuclearBand/UnityScriptableObjectDatabase/compare/v1.5.3...v1.6.0) (2020-07-01)
+
+
+### Features
+
+* ResetOnPlay and RemoveFolder ([d57d17d](https://github.com/NuclearBand/UnityScriptableObjectDatabase/commit/d57d17d448fdd8daaab2a2f58d57890b2191de98))
+
 ## [1.5.3](https://github.com/NuclearBand/UnityScriptableObjectDatabase/compare/v1.5.2...v1.5.3) (2020-05-28)
 
 
