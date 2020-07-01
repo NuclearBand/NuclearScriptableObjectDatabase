@@ -49,8 +49,7 @@ namespace NuclearBand
 
         protected override void Remove()
         {
-            AssetDatabase.DeleteAsset(SODatabaseSettings.Path + Path + "/" + Name);
-            AssetDatabase.Refresh();
+            SODatabaseInternal.RemoveFolder(Path + "/" + Name);
         }
 #endif
 
