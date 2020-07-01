@@ -53,6 +53,12 @@ namespace NuclearBand
             AssetDatabase.Refresh();
             return obj;
         }
+
+        public static void RemoveFolder(string path)
+        {
+            AssetDatabase.DeleteAsset(SODatabaseSettings.Path + "/" + path);
+            AssetDatabase.Refresh();
+        }
     }
 }
 #endif
