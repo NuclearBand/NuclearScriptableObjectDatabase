@@ -1,3 +1,10 @@
+# [1.7.0](https://github.com/NuclearBand/UnityScriptableObjectDatabase/compare/v1.6.0...v1.7.0) (2020-07-05)
+
+
+### Features
+
+* СОХРАНЕНИЕ и ЗАГРУЗКА! ([bf2d329](https://github.com/NuclearBand/UnityScriptableObjectDatabase/commit/bf2d32905b6e1ae61b75aeaeb9a27d42a43591e1))
+
 # [1.6.0](https://github.com/NuclearBand/UnityScriptableObjectDatabase/compare/v1.5.3...v1.6.0) (2020-07-01)
 
 
