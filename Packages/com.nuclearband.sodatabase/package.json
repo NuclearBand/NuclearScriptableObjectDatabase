@@ -1,9 +1,10 @@
 {
   "name": "com.nuclearband.sodatabase",
-  "displayName": "Scriptable Objeсt database",
+  "displayName": "Scriptable Obje\u0441t database",
   "version": "1.5.3",
   "dependencies": {
-    "com.unity.addressables": "1.7.5"
+    "com.unity.addressables": "1.7.5",
+    "com.unity.nuget.newtonsoft-json": "2.0.0"
   },
   "author": {
     "name": "Tr0sT",
