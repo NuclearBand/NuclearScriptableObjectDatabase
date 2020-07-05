@@ -1,8 +1,10 @@
+using Newtonsoft.Json;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
 namespace NuclearBand
 {
+    [JsonObject(MemberSerialization.OptIn)]
     public abstract class Holder
     {
         public Holder()

@@ -5,6 +5,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using JetBrains.Annotations;
+using Newtonsoft.Json;
+using Sirenix.Utilities;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 
@@ -13,6 +16,7 @@ namespace NuclearBand
     public static class SODatabase
     {
         private static FolderHolder root;
+        private static Dictionary<string, string> dataNodeJSONs;
 
         public static async Task Init(Action<float> onProgress, Action onComplete)
         {
@@ -75,15 +79,60 @@ namespace NuclearBand
             return curFolder.DataNodes.Values.OfType<T>().ToList();
         }
 
-        public static string Save()
+        public static void Save()
         {
-            
-            return "";
+            var res = SaveFolderHolder(root, "");
+            foreach (var pair in res)
+                PlayerPrefs.SetString(pair.Key, pair.Value);
+            PlayerPrefs.Save();
+        }
+
+        static Dictionary<string, string> SaveFolderHolder(FolderHolder folderHolder, string path)
+        {
+            var res = new Dictionary<string, string>();
+            foreach (var dataNodePair in folderHolder.DataNodes)
+            {
+                var fullPath = dataNodePair.Key;
+                if (!string.IsNullOrEmpty(path))
+                    fullPath = path + '/' + fullPath;
+                var json = JsonConvert.SerializeObject(dataNodePair.Value);
+                res.Add(fullPath, json);
+            }
+
+            foreach (var folderHolderPair in folderHolder.FolderHolders)
+            {
+                var fullPath = folderHolderPair.Key;
+                if (!string.IsNullOrEmpty(path))
+                    fullPath = path + '/' + fullPath;
+                var resAdd = SaveFolderHolder(folderHolderPair.Value, fullPath);
+                resAdd.ForEach(x => res.Add(x.Key, x.Value));
+            }
+            return res;
         }
 
         public static void Load()
         {
-            
+            LoadFolderHolder(root, "");
+        }
+        
+        static void LoadFolderHolder(FolderHolder folderHolder, string path)
+        {
+            foreach (var dataNodePair in folderHolder.DataNodes)
+            {
+                var fullPath = dataNodePair.Key;
+                if (!string.IsNullOrEmpty(path))
+                    fullPath = path + '/' + fullPath;
+                var json = PlayerPrefs.GetString(fullPath);
+                JsonConvert.PopulateObject(json, dataNodePair.Value);
+            }
+
+            foreach (var folderHolderPair in folderHolder.FolderHolders)
+            {
+                var fullPath = folderHolderPair.Key;
+                if (!string.IsNullOrEmpty(path))
+                    fullPath = path + '/' + fullPath;
+                LoadFolderHolder(folderHolderPair.Value, fullPath);
+            }
         }
     }
 }

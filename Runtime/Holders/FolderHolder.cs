@@ -52,6 +52,5 @@ namespace NuclearBand
             SODatabaseInternal.RemoveFolder(Path + "/" + Name);
         }
 #endif
-
     }
 }

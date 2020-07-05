@@ -1,8 +1,10 @@
 ﻿using System.Reflection;
+using Newtonsoft.Json;
 using Sirenix.OdinInspector;
 
 namespace NuclearBand
 {
+    [JsonObject(MemberSerialization.OptIn)]
     public class DataNode : SerializedScriptableObject
     {
         protected virtual void OnEnable()
