@@ -10,7 +10,7 @@ namespace NuclearBand
         protected virtual void OnEnable()
         {
             var typeInfo = GetType().GetTypeInfo();
-            var fields = typeInfo.GetFields(BindingFlags.NonPublic | BindingFlags.Instance);
+            var fields = typeInfo.GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
             foreach (var field in fields)
             {
                 var attributes = field.GetCustomAttributes(typeof(ResetOnPlay), false);
