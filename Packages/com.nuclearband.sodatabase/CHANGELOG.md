@@ -1,3 +1,10 @@
+## [1.7.1](https://github.com/NuclearBand/UnityScriptableObjectDatabase/compare/v1.7.0...v1.7.1) (2020-08-03)
+
+
+### Bug Fixes
+
+* ResetOnPlay ([9aee226](https://github.com/NuclearBand/UnityScriptableObjectDatabase/commit/9aee2262fb30ce2beaad96c5722a6f9574248b21))
+
 # [1.7.0](https://github.com/NuclearBand/UnityScriptableObjectDatabase/compare/v1.6.0...v1.7.0) (2020-07-05)
 
 
