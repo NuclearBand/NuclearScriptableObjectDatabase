@@ -123,6 +123,8 @@ namespace NuclearBand
                 if (!string.IsNullOrEmpty(path))
                     fullPath = path + '/' + fullPath;
                 var json = PlayerPrefs.GetString(fullPath);
+                if (string.IsNullOrEmpty(json))
+                    continue;
                 JsonConvert.PopulateObject(json, dataNodePair.Value);
             }
 

@@ -18,8 +18,10 @@ namespace NuclearBand
         public string Name;
 
         [ShowInInspector]
+        [HorizontalGroup("Path")]
         protected string tempPath;
         [ShowInInspector]
+        [HorizontalGroup("Name")]
         protected string tempName;
 
         public Holder(string path, string name)
@@ -34,15 +36,22 @@ namespace NuclearBand
             tempName = Name;
         }
 
+        [HorizontalGroup("Path")]
+        [ShowIf("@Path != tempPath")]
         [Button]
         protected abstract void Move();
     
+        [HorizontalGroup("Name")]
+        [ShowIf("@Name != tempName")]
         [Button]
         protected abstract void Rename();
         
         [Button]
+        [GUIColor(0.7f, 0.7f, 1f)]
         protected abstract void Clone();
+
         [Button]
+        [GUIColor(1f, 0.7f, 0.7f)]
         protected abstract void Remove();
 #endif
     }
