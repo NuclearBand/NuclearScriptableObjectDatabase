@@ -1,3 +1,10 @@
+## [1.7.2](https://github.com/NuclearBand/UnityScriptableObjectDatabase/compare/v1.7.1...v1.7.2) (2020-08-04)
+
+
+### Bug Fixes
+
+* visual of holder ([40cccdc](https://github.com/NuclearBand/UnityScriptableObjectDatabase/commit/40cccdcd664b6ad29297075d444acaa0f083eba6))
+
 ## [1.7.1](https://github.com/NuclearBand/UnityScriptableObjectDatabase/compare/v1.7.0...v1.7.1) (2020-08-03)
 
 
