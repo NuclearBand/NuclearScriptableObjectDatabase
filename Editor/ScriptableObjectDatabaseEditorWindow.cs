@@ -34,10 +34,10 @@ namespace NuclearBand.Editor
                 Config = {DrawSearchToolbar = true}
             };
 
-            if (SODatabaseSettings.Path == "")
+            if (SODatabaseSettings.Path == string.Empty)
             {
                 inSettings = true;
-                tree.AddMenuItemAtPath(new HashSet<OdinMenuItem>(), "", new OdinMenuItem(tree, "Settings", SODatabaseSettings.Instance));
+                tree.AddMenuItemAtPath(new HashSet<OdinMenuItem>(), string.Empty, new OdinMenuItem(tree, "Settings", SODatabaseSettings.Instance));
                 return tree;
             }
 
@@ -54,7 +54,7 @@ namespace NuclearBand.Editor
             switch (obj)
             {
                 case SelectionChangedType.ItemAdded:
-                    (MenuTree.Selection.SelectedValue as Holder).Select();
+                    ((Holder) MenuTree.Selection.SelectedValue)!.Select();
                     break;
                 case SelectionChangedType.ItemRemoved:
                     break;
@@ -75,18 +75,18 @@ namespace NuclearBand.Editor
             var odinMenuItemSet = new HashSet<OdinMenuItem>();
             foreach (var str1 in strings)
             {
-                var @object = AssetDatabase.LoadAssetAtPath(str1, type);
-                var path = "";
-                var name = "";
-                var str2 = "";
-                if (@object == null)
+                var asset = AssetDatabase.LoadAssetAtPath(str1, type);
+                var path = string.Empty;
+                var name = string.Empty;
+                var str2 = string.Empty;
+                if (asset == null)
                 {
                     //it's a directory
                     str2 = str1.Substring(assetFolderPath.Length);
                     int length = str2.LastIndexOf('/');
                     if (length == -1)
                     {
-                        path = "";
+                        path = string.Empty;
                         name = str2;
                     }
                     else
@@ -95,7 +95,7 @@ namespace NuclearBand.Editor
                         name = str2.Substring(length + 1);
                     }
 
-                    if (name == "")
+                    if (name == string.Empty)
                         continue;
                     tree.AddMenuItemAtPath(odinMenuItemSet, path, new OdinMenuItem(tree, name, new FolderHolder(path, name)));
 
@@ -110,7 +110,7 @@ namespace NuclearBand.Editor
 
                 path = path.Trim('/') + "/" + withoutExtension;
                 SplitMenuPath(path, out path, out name);
-                var menuItem = new OdinMenuItem(tree, name, new DataNodeHolder(path, name, (DataNode) @object));
+                var menuItem = new OdinMenuItem(tree, name, new DataNodeHolder(path, name, (DataNode) asset));
                 tree.AddMenuItemAtPath(odinMenuItemSet, path, menuItem);
                 AddDragHandles(menuItem);
             }
@@ -123,7 +123,7 @@ namespace NuclearBand.Editor
             int length = menuPath.LastIndexOf('/');
             if (length == -1)
             {
-                path = "";
+                path = string.Empty;
                 name = menuPath;
             }
 
@@ -139,7 +139,7 @@ namespace NuclearBand.Editor
             if (inSettings)
             {
                 base.OnBeginDrawEditors();
-                if (SODatabaseSettings.Path != "")
+                if (SODatabaseSettings.Path != string.Empty)
                 {
                     Close();
                     Open();
@@ -156,23 +156,22 @@ namespace NuclearBand.Editor
             {
                 if (selected != null)
                 {
-                    var type = selected.Value is DataNodeHolder ? (selected.Value as DataNodeHolder).DataNode.GetType().ToString() : "Directory";
+                    var type = selected.Value switch
+                    {
+                        DataNodeHolder holder => holder.DataNode.GetType().ToString(),
+                        _ => "Directory"
+                    };
                     GUILayout.Label(type);
                 }
 
                 var path = SODatabaseSettings.Path;
                 if (MenuTree.Selection.SelectedValue != null)
-                    path += string.IsNullOrEmpty((MenuTree.Selection.SelectedValue as Holder).Path) ? "" : (MenuTree.Selection.SelectedValue as Holder).Path + "/";
+                    path += string.IsNullOrEmpty((MenuTree.Selection.SelectedValue as Holder)!.Path) ? string.Empty : (MenuTree.Selection.SelectedValue as Holder)!.Path + "/";
                 if (MenuTree.Selection.SelectedValue is FolderHolder folderHolder)
                     path += folderHolder.Name + "/";
                 path = path.Substring(0, path.Length - 1);
                 if (SirenixEditorGUI.ToolbarButton(new GUIContent("Create DataNode")))
-                {
-                    DataNodeCreator.ShowDialog<DataNode>(path, obj =>
-                    {
-                        TrySelectMenuItemWithObject(obj); // Selects the newly created item in the editor
-                    });
-                }
+                    DataNodeCreator.ShowDialog<DataNode>(path, TrySelectMenuItemWithObject);
 
                 if (SirenixEditorGUI.ToolbarButton(new GUIContent("Create Folder")))
                 {
@@ -188,7 +187,7 @@ namespace NuclearBand.Editor
 
         private void AddDragHandles(OdinMenuItem menuItem)
         {
-            menuItem.OnDrawItem += x => DragAndDropUtilities.DragZone(menuItem.Rect, (menuItem.Value as DataNodeHolder).DataNode, false, false);
+            menuItem.OnDrawItem += x => DragAndDropUtilities.DragZone(menuItem.Rect, (menuItem.Value as DataNodeHolder)!.DataNode, false, false);
         }
     }
 }

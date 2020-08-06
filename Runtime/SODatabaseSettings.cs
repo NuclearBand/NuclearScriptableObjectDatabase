@@ -10,7 +10,7 @@ namespace NuclearBand
 {
     public class SODatabaseSettings : SerializedScriptableObject
     {
-        private static SODatabaseSettings instance;
+        private static SODatabaseSettings instance = null!;
         public static SODatabaseSettings Instance
         {
             get
@@ -20,11 +20,11 @@ namespace NuclearBand
 #if UNITY_EDITOR                
                 if (instance == null)
                 {
-                    instance = CreateInstance(typeof(SODatabaseSettings)) as SODatabaseSettings;
+                    instance = CreateInstance<SODatabaseSettings>();
                     AssetDatabase.CreateFolder("Assets", "com.nuclearband.sodatabase");
                     AssetDatabase.CreateFolder("Assets/com.nuclearband.sodatabase", "Resources");
-                    var dest = "Assets/com.nuclearband.sodatabase/Resources/";
-                    AssetDatabase.CreateAsset(instance, (dest + "SODatabaseSettings.asset"));
+                    const string destination = "Assets/com.nuclearband.sodatabase/Resources/";
+                    AssetDatabase.CreateAsset(instance, (destination + "SODatabaseSettings.asset"));
                     AssetDatabase.SaveAssets();
                     AssetDatabase.Refresh();
                 }
@@ -39,7 +39,7 @@ namespace NuclearBand
         [SerializeField]
         [ReadOnly]
         [Title("Don't forget to set this folder as Addressable with label")]
-        private string path = "";
+        private string path = string.Empty;
 
 
         [SerializeField]
@@ -49,7 +49,7 @@ namespace NuclearBand
 
         [FolderPath(AbsolutePath = false)]
         [NonSerialized, ShowInInspector]
-        public string SavePath;
+        public string SavePath = string.Empty;
         
         [Button]
         void Save()

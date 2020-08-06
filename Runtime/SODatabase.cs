@@ -5,7 +5,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using JetBrains.Annotations;
 using Newtonsoft.Json;
 using Sirenix.Utilities;
 using UnityEngine;
@@ -15,10 +14,9 @@ namespace NuclearBand
 {
     public static class SODatabase
     {
-        private static FolderHolder root;
-        private static Dictionary<string, string> dataNodeJSONs;
-
-        public static async Task Init(Action<float> onProgress, Action onComplete)
+        private static FolderHolder root = null!;
+        
+        public static async Task Init(Action<float>? onProgress, Action? onComplete)
         {
             var loadHandler = Addressables.LoadResourceLocationsAsync(SODatabaseSettings.Label);
 #pragma warning disable 4014
@@ -66,7 +64,7 @@ namespace NuclearBand
                 curFolder = curFolder.FolderHolders[pathElements[i]];
 
             var dataNodeName = pathElements[pathElements.Length - 1];
-            return curFolder.DataNodes[dataNodeName] as T;
+            return ((T) curFolder.DataNodes[dataNodeName])!;
         }
 
         public static List<T> GetModels<T>(string path) where T : DataNode
@@ -81,7 +79,7 @@ namespace NuclearBand
 
         public static void Save()
         {
-            var res = SaveFolderHolder(root, "");
+            var res = SaveFolderHolder(root, string.Empty);
             foreach (var pair in res)
                 PlayerPrefs.SetString(pair.Key, pair.Value);
             PlayerPrefs.Save();
@@ -112,7 +110,7 @@ namespace NuclearBand
 
         public static void Load()
         {
-            LoadFolderHolder(root, "");
+            LoadFolderHolder(root, string.Empty);
         }
         
         static void LoadFolderHolder(FolderHolder folderHolder, string path)
