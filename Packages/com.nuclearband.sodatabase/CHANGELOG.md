@@ -1,3 +1,10 @@
+# [1.8.0](https://github.com/NuclearBand/UnityScriptableObjectDatabase/compare/v1.7.2...v1.8.0) (2020-08-06)
+
+
+### Features
+
+* c# nullable enable ([6f35cc0](https://github.com/NuclearBand/UnityScriptableObjectDatabase/commit/6f35cc00dea1ebd54c47c7cafca84531a7f6f048))
+
 ## [1.7.2](https://github.com/NuclearBand/UnityScriptableObjectDatabase/compare/v1.7.1...v1.7.2) (2020-08-04)
 
 
