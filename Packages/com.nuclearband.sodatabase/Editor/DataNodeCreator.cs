@@ -11,10 +11,10 @@ namespace NuclearBand.Editor
 {
     public static class DataNodeCreator
     {
-        public static void ShowDialog<T>(string defaultDestinationPath, Action<T> onScritpableObjectCreated = null)
+        public static void ShowDialog<T>(string defaultDestinationPath, Action<T>? onScriptableObjectCreated = null)
             where T : ScriptableObject
         {
-            var selector = new ScriptableObjectSelector<T>(defaultDestinationPath, onScritpableObjectCreated);
+            var selector = new ScriptableObjectSelector<T>(defaultDestinationPath, onScriptableObjectCreated);
 
             if (selector.SelectionTree.EnumerateTree().Count() == 1)
             {
@@ -29,12 +29,12 @@ namespace NuclearBand.Editor
 
         private class ScriptableObjectSelector<T> : OdinSelector<Type> where T : ScriptableObject
         {
-            private Action<T> onScritpableObjectCreated;
-            private string defaultDestinationPath;
+            private readonly Action<T>? onScriptableObjectCreated;
+            private readonly string defaultDestinationPath;
 
-            public ScriptableObjectSelector(string defaultDestinationPath, Action<T> onScritpableObjectCreated = null)
+            public ScriptableObjectSelector(string defaultDestinationPath, Action<T>? onScriptableObjectCreated = null)
             {
-                this.onScritpableObjectCreated = onScritpableObjectCreated;
+                this.onScriptableObjectCreated = onScriptableObjectCreated;
                 this.defaultDestinationPath = defaultDestinationPath;
                 this.SelectionConfirmed += this.Save;
             }
@@ -52,17 +52,14 @@ namespace NuclearBand.Editor
 
             private void Save(IEnumerable<Type> selection)
             {
-                var obj = ScriptableObject.CreateInstance(selection.FirstOrDefault()) as T;
+                var obj = (ScriptableObject.CreateInstance(selection.FirstOrDefault()) as T)!;
 
-                string dest = this.defaultDestinationPath.TrimEnd('/');
+                var dest = this.defaultDestinationPath.TrimEnd('/');
 
                 AssetDatabase.CreateAsset(obj, AssetDatabase.GenerateUniqueAssetPath(dest + "/" + "New.asset"));
                 AssetDatabase.Refresh();
 
-                if (this.onScritpableObjectCreated != null)
-                {
-                    this.onScritpableObjectCreated(obj);
-                }
+                onScriptableObjectCreated?.Invoke(obj);
             }
         }
     }

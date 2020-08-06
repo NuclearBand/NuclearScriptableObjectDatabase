@@ -7,22 +7,22 @@ namespace NuclearBand
     [JsonObject(MemberSerialization.OptIn)]
     public abstract class Holder
     {
-        public Holder()
+        protected Holder()
         {
             
         }
 #if UNITY_EDITOR
         [HideInInspector]
-        public string Path;
+        public string Path = string.Empty;
         [HideInInspector]
-        public string Name;
+        public string Name = string.Empty;
 
         [ShowInInspector]
         [HorizontalGroup("Path")]
-        protected string tempPath;
+        protected string tempPath = string.Empty;
         [ShowInInspector]
         [HorizontalGroup("Name")]
-        protected string tempName;
+        protected string tempName = string.Empty;
 
         public Holder(string path, string name)
         {

@@ -1,4 +1,5 @@
 #if UNITY_EDITOR
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEditor;
@@ -10,7 +11,8 @@ namespace NuclearBand
     {
         public static T GetModelForEdit<T>(string path) where T : DataNode
         {
-            return AssetDatabase.LoadAssetAtPath(SODatabaseSettings.Path + path + ".asset", typeof(T)) as T;
+            return AssetDatabase.LoadAssetAtPath<T>(SODatabaseSettings.Path + path + ".asset") ??
+                throw new ArgumentException($"Could not get model at path {path}");
         }
 
         public static List<T> GetModelsForEdit<T>(string path) where T : DataNode
@@ -41,12 +43,15 @@ namespace NuclearBand
 
         public static T CreateModel<T>(string path, string name) where T : DataNode
         {
-            var model = GetModelForEdit<T>(path + "/" + name);
-            if (model != null)
+            try
+            {
+                var model = GetModelForEdit<T>(path + "/" + name);
                 return model;
-            
+            }
+            catch{}
+
             CreateFolder(path);
-            var obj = ScriptableObject.CreateInstance(typeof(T)) as T;
+            var obj = (ScriptableObject.CreateInstance(typeof(T)) as T)!;
             var fullPath = SODatabaseSettings.Path + path + "/" + name;
             AssetDatabase.CreateAsset(obj, fullPath + ".asset");
             AssetDatabase.SaveAssets();
