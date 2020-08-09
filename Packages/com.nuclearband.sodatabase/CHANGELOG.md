@@ -1,3 +1,10 @@
+## [1.8.1](https://github.com/NuclearBand/UnityScriptableObjectDatabase/compare/v1.8.0...v1.8.1) (2020-08-09)
+
+
+### Bug Fixes
+
+* убрал тот бесящий exception, при переключение на окно ([4c5dd38](https://github.com/NuclearBand/UnityScriptableObjectDatabase/commit/4c5dd3899a031450bc9d74d0dc06c05b913d6839))
+
 # [1.8.0](https://github.com/NuclearBand/UnityScriptableObjectDatabase/compare/v1.7.2...v1.8.0) (2020-08-06)
 
 
