@@ -1,4 +1,5 @@
-﻿#if UNITY_EDITOR
+#nullable enable
+#if UNITY_EDITOR
 using UnityEditor;
 #endif
 using System;

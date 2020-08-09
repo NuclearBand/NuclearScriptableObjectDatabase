@@ -1,4 +1,5 @@
-﻿#if UNITY_EDITOR
+#nullable enable
+#if UNITY_EDITOR
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -148,6 +149,8 @@ namespace NuclearBand.Editor
                 return;
             }
 
+            if (MenuTree == null || MenuTree.Selection == null)
+                return;
             var selected = MenuTree.Selection.FirstOrDefault();
             var toolbarHeight = MenuTree.Config.SearchToolbarHeight;
 

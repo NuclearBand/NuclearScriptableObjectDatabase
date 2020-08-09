@@ -1,3 +1,4 @@
+#nullable enable
 using System;
 using Sirenix.OdinInspector;
 using UnityEngine;
