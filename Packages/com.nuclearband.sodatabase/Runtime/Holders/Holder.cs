@@ -1,3 +1,4 @@
+#nullable enable
 using Newtonsoft.Json;
 using Sirenix.OdinInspector;
 using UnityEngine;
