@@ -1,7 +1,4 @@
 #nullable enable
-#if UNITY_EDITOR
-using UnityEditor;
-#endif
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,8 +13,12 @@ namespace NuclearBand
     public static class SODatabase
     {
         private static FolderHolder root = null!;
-        
-        public static async Task Init(Action<float>? onProgress, Action? onComplete)
+
+        public static async void Init(Action<float>? onProgress, Action? onComplete)
+        {
+            await InitAsync(onProgress, onComplete);
+        }
+        public static async Task InitAsync(Action<float>? onProgress, Action? onComplete)
         {
             var loadHandler = Addressables.LoadResourceLocationsAsync(SODatabaseSettings.Label);
 #pragma warning disable 4014
@@ -25,11 +26,16 @@ namespace NuclearBand
             {
                 while (!loadHandler.IsDone)
                 {
-                    onProgress?.Invoke(loadHandler.PercentComplete);
+                    CallAction(() =>
+                    {
+                        onProgress?.Invoke(loadHandler.PercentComplete);
+                    });
                     await Task.Delay(50);
                 }
-
-                onProgress?.Invoke(loadHandler.PercentComplete);
+                CallAction(() =>
+                {
+                    onProgress?.Invoke(loadHandler.PercentComplete);
+                });
             });
 #pragma warning restore 4014
             var resourceLocations = await loadHandler.Task;
@@ -54,7 +60,13 @@ namespace NuclearBand
                 dataNodeName = dataNodeName.Substring(0, dataNodeName.IndexOf(".asset", StringComparison.Ordinal));
                 curFolder.DataNodes.Add(dataNodeName, loadTask.Value.Result);
             }
-            onComplete?.Invoke();
+
+            CallAction(onComplete);
+        }
+
+        static async void CallAction(Action? action)
+        {
+            action?.Invoke();
         }
 
         public static T GetModel<T>(string path) where T : DataNode
@@ -68,14 +80,35 @@ namespace NuclearBand
             return ((T) curFolder.DataNodes[dataNodeName])!;
         }
 
-        public static List<T> GetModels<T>(string path) where T : DataNode
+        public static List<T> GetModels<T>(string path, bool includeSubFolders = false) where T : DataNode
         {
             var pathElements = path.Split('/');
             var curFolder = root;
-            for (var i = 0; i < pathElements.Length; i++)
-                curFolder = curFolder.FolderHolders[pathElements[i]];
+            if (path != string.Empty)
+                for (var i = 0; i < pathElements.Length; i++)
+                {
+                    try
+                    {
+                        curFolder = curFolder.FolderHolders[pathElements[i]];
+                    }
+                    catch (Exception e)
+                    {
+                        
+                    }
+                }
 
-            return curFolder.DataNodes.Values.OfType<T>().ToList();
+            var res = curFolder.DataNodes.Values.OfType<T>().ToList();
+            if (!includeSubFolders)
+                return res;
+
+
+            foreach (var folderName in curFolder.FolderHolders.Keys)
+            {
+                var newPath = path == string.Empty ? folderName : $"{path}/{folderName}";
+                res.AddRange(GetModels<T>(newPath, includeSubFolders));
+            }
+
+            return res;
         }
 
         public static void Save()
@@ -106,6 +139,7 @@ namespace NuclearBand
                 var resAdd = SaveFolderHolder(folderHolderPair.Value, fullPath);
                 resAdd.ForEach(x => res.Add(x.Key, x.Value));
             }
+
             return res;
         }
 
@@ -113,7 +147,7 @@ namespace NuclearBand
         {
             LoadFolderHolder(root, string.Empty);
         }
-        
+
         static void LoadFolderHolder(FolderHolder folderHolder, string path)
         {
             foreach (var dataNodePair in folderHolder.DataNodes)
