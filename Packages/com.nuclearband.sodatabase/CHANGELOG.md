@@ -1,3 +1,10 @@
+# [1.9.0](https://github.com/NuclearBand/UnityScriptableObjectDatabase/compare/v1.8.1...v1.9.0) (2020-08-16)
+
+
+### Features
+
+* GetModels(includeSubFolders) ([70279eb](https://github.com/NuclearBand/UnityScriptableObjectDatabase/commit/70279eb3a110229c29b22ebedefd885cfa6c4eb7))
+
 ## [1.8.1](https://github.com/NuclearBand/UnityScriptableObjectDatabase/compare/v1.8.0...v1.8.1) (2020-08-09)
 
 
