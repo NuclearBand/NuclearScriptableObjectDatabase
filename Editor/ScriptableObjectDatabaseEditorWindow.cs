@@ -6,7 +6,6 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Serialization;
 using Sirenix.OdinInspector.Editor;
 using Sirenix.Utilities;
 using Sirenix.Utilities.Editor;
@@ -24,11 +23,6 @@ namespace NuclearBand.Editor
         {
             var window = GetWindow<ScriptableObjectDatabaseEditorWindow>();
             window.position = GUIHelper.GetEditorWindowRect().AlignCenter(800, 500);
-            window.OnClose += () =>
-            {
-                AssetDatabase.SaveAssets();
-                AssetDatabase.Refresh();
-            };
         }
 
         [MenuItem("Tools/NuclearBand/ScriptableObjectDatabase-ClearSave")]
@@ -51,13 +45,37 @@ namespace NuclearBand.Editor
 
                 EditorUtility.SetDirty(model);
             }
+
             AssetDatabase.SaveAssets();
         }
-        
+
         [MenuItem("Tools/NuclearBand/ScriptableObjectDatabase-OpenSaveFolder")]
         private static void OpenSaveFolder()
         {
             EditorUtility.RevealInFinder(Application.persistentDataPath);
+        }
+
+        [InitializeOnEnterPlayMode]
+        private static async void ResetOnPlay()
+        {
+            await SODatabase.InitAsync(null, null);
+            await SODatabase.LoadAsync();
+            var models = SODatabase.GetModels<DataNode>("", true);
+            foreach (var model in models)
+            {
+                var typeInfo = model.GetType().GetTypeInfo();
+                var fields = typeInfo.GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
+                foreach (var field in fields)
+                {
+                    var attributes = field.GetCustomAttributes(typeof(ResetOnPlay), false);
+                    if (attributes.Length > 0)
+                        field.SetValue(model, default);
+                }
+
+                EditorUtility.SetDirty(model);
+            }
+
+            AssetDatabase.SaveAssets();
         }
 
         protected override OdinMenuTree BuildMenuTree()
@@ -98,7 +116,7 @@ namespace NuclearBand.Editor
                     throw new ArgumentOutOfRangeException(nameof(obj), obj, null);
             }
         }
-        
+
         void AddAllAssetsAtPath(
             OdinMenuTree tree,
             string assetFolderPath,
@@ -217,8 +235,39 @@ namespace NuclearBand.Editor
                     AssetDatabase.CreateFolder(path, uniqName);
                     AssetDatabase.Refresh();
                 }
+
+                if (SirenixEditorGUI.ToolbarButton(new GUIContent("Save")))
+                    Save();
             }
             SirenixEditorGUI.EndHorizontalToolbar();
+        }
+
+        private void Save()
+        {
+            Flatten(MenuTree.MenuItems).ForEach(item =>
+            {
+                if (!(item.Value is DataNodeHolder dataNodeHolder))
+                    return;
+                var fullPath = $"{(string.IsNullOrEmpty(dataNodeHolder.Path) ? string.Empty : $"{dataNodeHolder.Path}/")}{dataNodeHolder.DataNode.name}";
+                if (dataNodeHolder.DataNode.FullPath == fullPath)
+                    return;
+                dataNodeHolder.DataNode.SetFullPath(dataNodeHolder.Path);
+                EditorUtility.SetDirty(dataNodeHolder.DataNode);
+            });
+
+            AssetDatabase.SaveAssets();
+            AssetDatabase.Refresh();
+        }
+
+        static IEnumerable<OdinMenuItem> Flatten(List<OdinMenuItem> collection)
+        {
+            foreach (var o in collection)
+            {
+                foreach (var o1 in Flatten(o.ChildMenuItems))
+                    yield return o1;
+                
+                yield return o;
+            }
         }
 
         private void AddDragHandles(OdinMenuItem menuItem)
