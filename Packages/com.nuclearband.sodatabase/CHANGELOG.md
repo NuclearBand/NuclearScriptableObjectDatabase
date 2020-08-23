@@ -1,3 +1,10 @@
+# [1.10.0](https://github.com/NuclearBand/UnityScriptableObjectDatabase/compare/v1.9.0...v1.10.0) (2020-08-23)
+
+
+### Features
+
+* save and load to file instead of playerprefs ([64a2fd7](https://github.com/NuclearBand/UnityScriptableObjectDatabase/commit/64a2fd745bfd18f988447e0e437b91f15e53bca2))
+
 # [1.9.0](https://github.com/NuclearBand/UnityScriptableObjectDatabase/compare/v1.8.1...v1.9.0) (2020-08-16)
 
 
