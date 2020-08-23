@@ -259,7 +259,7 @@ namespace NuclearBand.Editor
             AssetDatabase.Refresh();
         }
 
-        static IEnumerable<OdinMenuItem> Flatten(List<OdinMenuItem> collection)
+        private static IEnumerable<OdinMenuItem> Flatten(IEnumerable<OdinMenuItem> collection)
         {
             foreach (var o in collection)
             {
