@@ -1,3 +1,10 @@
+## [1.11.1](https://github.com/NuclearBand/UnityScriptableObjectDatabase/compare/v1.11.0...v1.11.1) (2020-08-23)
+
+
+### Bug Fixes
+
+* remove warning ([04b5118](https://github.com/NuclearBand/UnityScriptableObjectDatabase/commit/04b5118ba0c1ddc90d036a12b54c7b4d6f965edd))
+
 # [1.11.0](https://github.com/NuclearBand/UnityScriptableObjectDatabase/compare/v1.10.0...v1.11.0) (2020-08-23)
 
 
