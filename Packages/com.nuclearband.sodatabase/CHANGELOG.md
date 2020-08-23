@@ -1,3 +1,10 @@
+# [1.11.0](https://github.com/NuclearBand/UnityScriptableObjectDatabase/compare/v1.10.0...v1.11.0) (2020-08-23)
+
+
+### Features
+
+* link to datanodes runtime serialization ([8baf846](https://github.com/NuclearBand/UnityScriptableObjectDatabase/commit/8baf8462ef4e3e7236b7265b2f614c5233dff989))
+
 # [1.10.0](https://github.com/NuclearBand/UnityScriptableObjectDatabase/compare/v1.9.0...v1.10.0) (2020-08-23)
 
 
