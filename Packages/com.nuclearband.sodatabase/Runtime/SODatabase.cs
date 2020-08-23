@@ -17,6 +17,12 @@ namespace NuclearBand
 
         private static FolderHolder root = null!;
 
+        private static JsonSerializerSettings jsonSerializerSettings => new JsonSerializerSettings
+        {
+            Formatting = Formatting.None,
+            ReferenceResolverProvider = () => new DataNodeReferenceResolver()
+        };
+
         public static async void Init(Action<float>? onProgress, Action? onComplete)
         {
             await InitAsync(onProgress, onComplete);
@@ -127,7 +133,8 @@ namespace NuclearBand
                 var fullPath = dataNodePair.Key;
                 if (!string.IsNullOrEmpty(path))
                     fullPath = path + '/' + fullPath;
-                var json = JsonConvert.SerializeObject(dataNodePair.Value);
+                DataNodeReferenceResolver.CurrentDataNode = dataNodePair.Value;
+                var json = JsonConvert.SerializeObject(dataNodePair.Value, jsonSerializerSettings);
                 res.Add(fullPath, json);
             }
 
@@ -136,6 +143,7 @@ namespace NuclearBand
                 var fullPath = folderHolderPair.Key;
                 if (!string.IsNullOrEmpty(path))
                     fullPath = path + '/' + fullPath;
+                
                 var resAdd = SaveFolderHolder(folderHolderPair.Value, fullPath);
                 resAdd.ForEach(x => res.Add(x.Key, x.Value));
             }
@@ -170,7 +178,8 @@ namespace NuclearBand
                 var json = data.ContainsKey(fullPath) ? data[fullPath] : string.Empty;
                 if (string.IsNullOrEmpty(json))
                     continue;
-                JsonConvert.PopulateObject(json, dataNodePair.Value);
+                DataNodeReferenceResolver.CurrentDataNode = dataNodePair.Value; 
+                JsonConvert.PopulateObject(json, dataNodePair.Value, jsonSerializerSettings);
             }
 
             foreach (var folderHolderPair in folderHolder.FolderHolders)

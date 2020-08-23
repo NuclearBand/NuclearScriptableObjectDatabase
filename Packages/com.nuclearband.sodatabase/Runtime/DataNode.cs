@@ -1,23 +1,20 @@
 #nullable enable
-using System.Reflection;
 using Newtonsoft.Json;
 using Sirenix.OdinInspector;
+using UnityEngine;
 
 namespace NuclearBand
 {
-    [JsonObject(MemberSerialization.OptIn)]
+    [JsonObject(MemberSerialization.OptIn, IsReference = true)]
     public class DataNode : SerializedScriptableObject
     {
-        protected virtual void OnEnable()
-        {
-            var typeInfo = GetType().GetTypeInfo();
-            var fields = typeInfo.GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
-            foreach (var field in fields)
-            {
-                var attributes = field.GetCustomAttributes(typeof(ResetOnPlay), false);
-                if (attributes.Length > 0)
-                    field.SetValue(this, default);
-            }
-        }
+        [SerializeField, HideInInspector]
+        private string fullPath = string.Empty;
+
+        public string FullPath => $"{(string.IsNullOrEmpty(fullPath) ? string.Empty : $"{fullPath}/")}{name}";
+
+#if UNITY_EDITOR
+        public void SetFullPath(string fullPath) => this.fullPath = fullPath;
+#endif
     }
 }
