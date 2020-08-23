@@ -6,7 +6,7 @@ using NuclearBand;
 public class DataNodeReferenceResolver : IReferenceResolver
 {
     public static DataNode CurrentDataNode = null!;
-    
+
     public object ResolveReference(object context, string reference)
     {
         try
@@ -15,7 +15,7 @@ public class DataNodeReferenceResolver : IReferenceResolver
         }
         catch (Exception)
         {
-            return null;
+            return null!;
         }
     }
 
