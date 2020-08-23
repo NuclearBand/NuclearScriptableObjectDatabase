@@ -1,6 +1,7 @@
 #nullable enable
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
@@ -12,12 +13,15 @@ namespace NuclearBand
 {
     public static class SODatabase
     {
+        public static string SavePath => Application.persistentDataPath + @"/save.txt";
+
         private static FolderHolder root = null!;
 
         public static async void Init(Action<float>? onProgress, Action? onComplete)
         {
             await InitAsync(onProgress, onComplete);
         }
+
         public static async Task InitAsync(Action<float>? onProgress, Action? onComplete)
         {
             var loadHandler = Addressables.LoadResourceLocationsAsync(SODatabaseSettings.Label);
@@ -26,16 +30,11 @@ namespace NuclearBand
             {
                 while (!loadHandler.IsDone)
                 {
-                    CallAction(() =>
-                    {
-                        onProgress?.Invoke(loadHandler.PercentComplete);
-                    });
+                    CallAction(() => { onProgress?.Invoke(loadHandler.PercentComplete); });
                     await Task.Delay(50);
                 }
-                CallAction(() =>
-                {
-                    onProgress?.Invoke(loadHandler.PercentComplete);
-                });
+
+                CallAction(() => { onProgress?.Invoke(loadHandler.PercentComplete); });
             });
 #pragma warning restore 4014
             var resourceLocations = await loadHandler.Task;
@@ -67,6 +66,7 @@ namespace NuclearBand
         static async void CallAction(Action? action)
         {
             action?.Invoke();
+            await Task.CompletedTask;
         }
 
         public static T GetModel<T>(string path) where T : DataNode
@@ -87,14 +87,10 @@ namespace NuclearBand
             if (path != string.Empty)
                 for (var i = 0; i < pathElements.Length; i++)
                 {
-                    try
-                    {
+                    if (curFolder.FolderHolders.ContainsKey(pathElements[i]))
                         curFolder = curFolder.FolderHolders[pathElements[i]];
-                    }
-                    catch (Exception e)
-                    {
-                        
-                    }
+                    else
+                        break;
                 }
 
             var res = curFolder.DataNodes.Values.OfType<T>().ToList();
@@ -111,12 +107,16 @@ namespace NuclearBand
             return res;
         }
 
-        public static void Save()
+        public static async void Save()
+        {
+            await SaveAsync();
+        }
+
+        public static async Task SaveAsync()
         {
             var res = SaveFolderHolder(root, string.Empty);
-            foreach (var pair in res)
-                PlayerPrefs.SetString(pair.Key, pair.Value);
-            PlayerPrefs.Save();
+            using var fileStream = new StreamWriter(SavePath);
+            await fileStream.WriteAsync(JsonConvert.SerializeObject(res));
         }
 
         static Dictionary<string, string> SaveFolderHolder(FolderHolder folderHolder, string path)
@@ -143,19 +143,31 @@ namespace NuclearBand
             return res;
         }
 
-        public static void Load()
+        public static async void Load()
         {
-            LoadFolderHolder(root, string.Empty);
+            await LoadAsync();
         }
 
-        static void LoadFolderHolder(FolderHolder folderHolder, string path)
+        public static async Task LoadAsync()
+        {
+            if (!File.Exists(SavePath))
+                return;
+            
+            using var fileStream = new StreamReader(SavePath);
+            var serializedDictionary = await fileStream.ReadToEndAsync();
+            var dict = JsonConvert.DeserializeObject<Dictionary<string, string>>(serializedDictionary);
+            LoadFolderHolder(root, string.Empty, dict);
+        }
+
+
+        static void LoadFolderHolder(FolderHolder folderHolder, string path, Dictionary<string, string> data)
         {
             foreach (var dataNodePair in folderHolder.DataNodes)
             {
                 var fullPath = dataNodePair.Key;
                 if (!string.IsNullOrEmpty(path))
                     fullPath = path + '/' + fullPath;
-                var json = PlayerPrefs.GetString(fullPath);
+                var json = data.ContainsKey(fullPath) ? data[fullPath] : string.Empty;
                 if (string.IsNullOrEmpty(json))
                     continue;
                 JsonConvert.PopulateObject(json, dataNodePair.Value);
@@ -166,7 +178,7 @@ namespace NuclearBand
                 var fullPath = folderHolderPair.Key;
                 if (!string.IsNullOrEmpty(path))
                     fullPath = path + '/' + fullPath;
-                LoadFolderHolder(folderHolderPair.Value, fullPath);
+                LoadFolderHolder(folderHolderPair.Value, fullPath, data);
             }
         }
     }

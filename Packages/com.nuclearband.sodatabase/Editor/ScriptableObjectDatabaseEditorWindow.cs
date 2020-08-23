@@ -2,7 +2,11 @@
 #if UNITY_EDITOR
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Reflection;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 using Sirenix.OdinInspector.Editor;
 using Sirenix.Utilities;
 using Sirenix.Utilities.Editor;
@@ -25,6 +29,35 @@ namespace NuclearBand.Editor
                 AssetDatabase.SaveAssets();
                 AssetDatabase.Refresh();
             };
+        }
+
+        [MenuItem("Tools/NuclearBand/ScriptableObjectDatabase-ClearSave")]
+        private static async void ClearSave()
+        {
+            File.Delete(SODatabase.SavePath);
+            await SODatabase.InitAsync(null, null);
+            await SODatabase.LoadAsync();
+            var models = SODatabase.GetModels<DataNode>("", true);
+            foreach (var model in models)
+            {
+                var typeInfo = model.GetType().GetTypeInfo();
+                var fields = typeInfo.GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
+                foreach (var field in fields)
+                {
+                    var attributes = field.GetCustomAttributes(typeof(JsonPropertyAttribute), false);
+                    if (attributes.Length > 0)
+                        field.SetValue(model, default);
+                }
+
+                EditorUtility.SetDirty(model);
+            }
+            AssetDatabase.SaveAssets();
+        }
+        
+        [MenuItem("Tools/NuclearBand/ScriptableObjectDatabase-OpenSaveFolder")]
+        private static void OpenSaveFolder()
+        {
+            EditorUtility.RevealInFinder(Application.persistentDataPath);
         }
 
         protected override OdinMenuTree BuildMenuTree()
