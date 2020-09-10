@@ -27,25 +27,25 @@ namespace NuclearBand
 
         protected override void Move()
         {
+            AssetDatabase.Refresh();
             AssetDatabase.MoveAsset(SODatabaseSettings.Path + Path + "/" + Name, SODatabaseSettings.Path + tempPath + "/" + Name);
             AssetDatabase.SaveAssets();
-            AssetDatabase.Refresh();
         }
 
         protected override void Rename()
         {
+            AssetDatabase.Refresh();
             AssetDatabase.RenameAsset(SODatabaseSettings.Path + Path + "/" + Name, tempName);
             Name = tempName;
             AssetDatabase.SaveAssets();
-            AssetDatabase.Refresh();
         }
 
         protected override void Clone()
         {
+            AssetDatabase.Refresh();
             AssetDatabase.CopyAsset(SODatabaseSettings.Path + Path + "/" + Name,
                 AssetDatabase.GenerateUniqueAssetPath(SODatabaseSettings.Path + Path + "/" + Name));
             AssetDatabase.SaveAssets();
-            AssetDatabase.Refresh();
         }
 
         protected override void Remove()

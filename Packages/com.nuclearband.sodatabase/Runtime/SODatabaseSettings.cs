@@ -21,13 +21,13 @@ namespace NuclearBand
 #if UNITY_EDITOR                
                 if (instance == null)
                 {
+                    AssetDatabase.Refresh();
                     instance = CreateInstance<SODatabaseSettings>();
                     AssetDatabase.CreateFolder("Assets", "com.nuclearband.sodatabase");
                     AssetDatabase.CreateFolder("Assets/com.nuclearband.sodatabase", "Resources");
                     const string destination = "Assets/com.nuclearband.sodatabase/Resources/";
                     AssetDatabase.CreateAsset(instance, (destination + "SODatabaseSettings.asset"));
                     AssetDatabase.SaveAssets();
-                    AssetDatabase.Refresh();
                 }
 #endif                
                 return instance;
