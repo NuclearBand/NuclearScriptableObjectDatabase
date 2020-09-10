@@ -1,3 +1,10 @@
+## [1.11.2](https://github.com/NuclearBand/UnityScriptableObjectDatabase/compare/v1.11.1...v1.11.2) (2020-09-10)
+
+
+### Bug Fixes
+
+* new unity version, serialization warning ([fc7774f](https://github.com/NuclearBand/UnityScriptableObjectDatabase/commit/fc7774f6405dc902f1f4e06d696866164e3f7bb7))
+
 ## [1.11.1](https://github.com/NuclearBand/UnityScriptableObjectDatabase/compare/v1.11.0...v1.11.1) (2020-08-23)
 
 
