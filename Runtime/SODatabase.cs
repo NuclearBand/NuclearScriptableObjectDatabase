@@ -167,7 +167,6 @@ namespace NuclearBand
             LoadFolderHolder(root, string.Empty, dict);
         }
 
-
         static void LoadFolderHolder(FolderHolder folderHolder, string path, Dictionary<string, string> data)
         {
             foreach (var dataNodePair in folderHolder.DataNodes)

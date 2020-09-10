@@ -18,13 +18,15 @@ namespace NuclearBand
 
         public static List<T> GetModelsForEdit<T>(string path) where T : DataNode
         {
-            var modelGUIDs = AssetDatabase.FindAssets($"t:{typeof(T).Name}",new [] {SODatabaseSettings.Path + path});
+            var searchPath = (SODatabaseSettings.Path + path).TrimEnd('/');
+            var modelGUIDs = AssetDatabase.FindAssets($"t:{typeof(T).Name}",new [] {searchPath});
 
             return modelGUIDs.Select(model => AssetDatabase.LoadAssetAtPath<T>(AssetDatabase.GUIDToAssetPath(model))).ToList();
         }
 
         public static void CreateFolder(string path)
         {
+            AssetDatabase.Refresh();
             var folders = path.Split('/');
             var fullPath = SODatabaseSettings.Path.TrimEnd('/');
             foreach (var folder in folders)
@@ -39,7 +41,6 @@ namespace NuclearBand
                 
             }
             AssetDatabase.SaveAssets();
-            AssetDatabase.Refresh();
         }
 
         public static T CreateModel<T>(string path, string name) where T : DataNode
@@ -51,12 +52,13 @@ namespace NuclearBand
             }
             catch{}
 
+            AssetDatabase.Refresh();
             CreateFolder(path);
             var obj = (ScriptableObject.CreateInstance(typeof(T)) as T)!;
             var fullPath = SODatabaseSettings.Path + path + "/" + name;
             AssetDatabase.CreateAsset(obj, fullPath + ".asset");
             AssetDatabase.SaveAssets();
-            AssetDatabase.Refresh();
+            
             return obj;
         }
 

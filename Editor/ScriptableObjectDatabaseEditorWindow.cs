@@ -28,6 +28,8 @@ namespace NuclearBand.Editor
         [MenuItem("Tools/NuclearBand/ScriptableObjectDatabase-ClearSave")]
         private static async void ClearSave()
         {
+            AssetDatabase.Refresh();
+            
             File.Delete(SODatabase.SavePath);
             await SODatabase.InitAsync(null, null);
             await SODatabase.LoadAsync();
@@ -56,11 +58,11 @@ namespace NuclearBand.Editor
         }
 
         [InitializeOnEnterPlayMode]
-        private static async void ResetOnPlay()
+        private static void ResetOnPlay()
         {
-            await SODatabase.InitAsync(null, null);
-            await SODatabase.LoadAsync();
-            var models = SODatabase.GetModels<DataNode>("", true);
+            AssetDatabase.Refresh();
+            
+            var models = SODatabaseInternal.GetModelsForEdit<DataNode>("");
             foreach (var model in models)
             {
                 var typeInfo = model.GetType().GetTypeInfo();
@@ -244,6 +246,8 @@ namespace NuclearBand.Editor
 
         private void Save()
         {
+            AssetDatabase.Refresh();
+            
             Flatten(MenuTree.MenuItems).ForEach(item =>
             {
                 if (!(item.Value is DataNodeHolder dataNodeHolder))
@@ -256,7 +260,6 @@ namespace NuclearBand.Editor
             });
 
             AssetDatabase.SaveAssets();
-            AssetDatabase.Refresh();
         }
 
         private static IEnumerable<OdinMenuItem> Flatten(IEnumerable<OdinMenuItem> collection)
