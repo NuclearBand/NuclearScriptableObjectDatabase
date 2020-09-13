@@ -1,3 +1,10 @@
+## [1.11.3](https://github.com/NuclearBand/UnityScriptableObjectDatabase/compare/v1.11.2...v1.11.3) (2020-09-13)
+
+
+### Bug Fixes
+
+* clear save ([d44cb2c](https://github.com/NuclearBand/UnityScriptableObjectDatabase/commit/d44cb2c5faad361f69ee19f545b7d1d614a3b896))
+
 ## [1.11.2](https://github.com/NuclearBand/UnityScriptableObjectDatabase/compare/v1.11.1...v1.11.2) (2020-09-10)
 
 
