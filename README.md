@@ -10,3 +10,6 @@ You can install via git url by adding this entry in your **manifest.json**
 "com.nuclearband.sodatabase": "https://github.com/Tr0sT/UnityScriptableObjectDatabase.git#upm"
 ```
 The library depends on [Odin Inspector](https://odininspector.com/)
+
+## Documentation
+- [Документация](https://github.com/NuclearBand/UnityWindowsManager/blob/master/Assets/com.nuclearband.windowsmanager/Documentation/Documentation.ru.md)
