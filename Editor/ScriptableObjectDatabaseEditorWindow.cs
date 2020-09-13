@@ -26,14 +26,12 @@ namespace NuclearBand.Editor
         }
 
         [MenuItem("Tools/NuclearBand/ScriptableObjectDatabase-ClearSave")]
-        private static async void ClearSave()
+        private static void ClearSave()
         {
             AssetDatabase.Refresh();
             
             File.Delete(SODatabase.SavePath);
-            await SODatabase.InitAsync(null, null);
-            await SODatabase.LoadAsync();
-            var models = SODatabase.GetModels<DataNode>("", true);
+            var models = SODatabaseInternal.GetModelsForEdit<DataNode>("");
             foreach (var model in models)
             {
                 var typeInfo = model.GetType().GetTypeInfo();
