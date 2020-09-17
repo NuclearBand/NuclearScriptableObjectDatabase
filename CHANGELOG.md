@@ -1,3 +1,10 @@
+# [1.12.0](https://github.com/NuclearBand/UnityScriptableObjectDatabase/compare/v1.11.3...v1.12.0) (2020-09-17)
+
+
+### Features
+
+* runtime-only models ([c599e17](https://github.com/NuclearBand/UnityScriptableObjectDatabase/commit/c599e1710c0a0d9a61125f111ac57894bc016d7a))
+
 ## [1.11.3](https://github.com/NuclearBand/UnityScriptableObjectDatabase/compare/v1.11.2...v1.11.3) (2020-09-13)
 
 
