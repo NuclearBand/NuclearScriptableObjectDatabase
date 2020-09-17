@@ -156,8 +156,11 @@ namespace NuclearBand
 
         public static async Task LoadAsync()
         {
-            if (!File.Exists(SavePath))
+            if (!File.Exists(SavePath)) {
+                foreach (var dataNode in DataNodes(root))
+                    dataNode.AfterLoad();
                 return;
+            }
             
             using var fileStream = new StreamReader(SavePath);
             var serializedDictionary = await fileStream.ReadToEndAsync();
