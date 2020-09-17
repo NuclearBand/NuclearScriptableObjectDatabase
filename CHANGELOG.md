@@ -1,3 +1,10 @@
+# [1.13.0](https://github.com/NuclearBand/UnityScriptableObjectDatabase/compare/v1.12.0...v1.13.0) (2020-09-17)
+
+
+### Features
+
+* new DataNode methods BeforeSave and AfterLoad ([7c9b05c](https://github.com/NuclearBand/UnityScriptableObjectDatabase/commit/7c9b05ce66dd2fc6b8e6aef680d639c436d8c644))
+
 # [1.12.0](https://github.com/NuclearBand/UnityScriptableObjectDatabase/compare/v1.11.3...v1.12.0) (2020-09-17)
 
 
