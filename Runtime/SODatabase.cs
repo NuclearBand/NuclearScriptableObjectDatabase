@@ -129,41 +129,24 @@ namespace NuclearBand
 
         public static async Task SaveAsync()
         {
+            var staticNodes = new Dictionary<string, string>();
+            foreach (var dataNode in DataNodes(root))
+            {
+                DataNodeReferenceResolver.CurrentDataNode = dataNode;
+                dataNode.BeforeSave();
+                var json = JsonConvert.SerializeObject(dataNode, jsonSerializerSettings);
+                staticNodes.Add(dataNode.FullPath, json);
+            }
+            
             var save = new SODatabaseSaveFormat
             {
-                StaticNodes = SaveFolderHolder(root, string.Empty)
+                StaticNodes = staticNodes
             };
-            foreach (var runtimeModelPair in runtimeModels)
+            foreach (var runtimeModelPair in runtimeModels) 
                 save.RuntimeNodes.Add(runtimeModelPair.Key, JsonConvert.SerializeObject(runtimeModelPair.Value, jsonRuntimeSerializerSettings));
             
             using var fileStream = new StreamWriter(SavePath);
             await fileStream.WriteAsync(JsonConvert.SerializeObject(save));
-        }
-
-        static Dictionary<string, string> SaveFolderHolder(FolderHolder folderHolder, string path)
-        {
-            var res = new Dictionary<string, string>();
-            foreach (var dataNodePair in folderHolder.DataNodes)
-            {
-                var fullPath = dataNodePair.Key;
-                if (!string.IsNullOrEmpty(path))
-                    fullPath = path + '/' + fullPath;
-                DataNodeReferenceResolver.CurrentDataNode = dataNodePair.Value;
-                var json = JsonConvert.SerializeObject(dataNodePair.Value, jsonSerializerSettings);
-                res.Add(fullPath, json);
-            }
-
-            foreach (var folderHolderPair in folderHolder.FolderHolders)
-            {
-                var fullPath = folderHolderPair.Key;
-                if (!string.IsNullOrEmpty(path))
-                    fullPath = path + '/' + fullPath;
-                
-                var resAdd = SaveFolderHolder(folderHolderPair.Value, fullPath);
-                resAdd.ForEach(x => res.Add(x.Key, x.Value));
-            }
-
-            return res;
         }
 
         public static async void Load()
@@ -179,38 +162,37 @@ namespace NuclearBand
             using var fileStream = new StreamReader(SavePath);
             var serializedDictionary = await fileStream.ReadToEndAsync();
             var save = JsonConvert.DeserializeObject<SODatabaseSaveFormat>(serializedDictionary);
-            LoadFolderHolder(root, string.Empty, save.StaticNodes);
+            
+            foreach (var dataNode in DataNodes(root))
+            {
+                DataNodeReferenceResolver.CurrentDataNode = dataNode;
+                var json = save.StaticNodes.ContainsKey(dataNode.FullPath) ? save.StaticNodes[dataNode.FullPath] : string.Empty;
+                if (string.IsNullOrEmpty(json))
+                    continue;
+                DataNodeReferenceResolver.CurrentDataNode = dataNode; 
+                JsonConvert.PopulateObject(json, dataNode, jsonSerializerSettings);
+            }
+            
             runtimeModels.Clear();
             foreach (var runtimeNodePair in save.RuntimeNodes)
             {
                 var x = JsonConvert.DeserializeObject(runtimeNodePair.Value, jsonRuntimeSerializerSettings)!;
                 runtimeModels.Add(runtimeNodePair.Key, x);
             }
-        }
 
-        static void LoadFolderHolder(FolderHolder folderHolder, string path, Dictionary<string, string> data)
+            foreach (var dataNode in DataNodes(root))
+                dataNode.AfterLoad();
+        }
+        private static IEnumerable<DataNode> DataNodes(FolderHolder folderHolder)
         {
             foreach (var dataNodePair in folderHolder.DataNodes)
-            {
-                var fullPath = dataNodePair.Key;
-                if (!string.IsNullOrEmpty(path))
-                    fullPath = path + '/' + fullPath;
-                var json = data.ContainsKey(fullPath) ? data[fullPath] : string.Empty;
-                if (string.IsNullOrEmpty(json))
-                    continue;
-                DataNodeReferenceResolver.CurrentDataNode = dataNodePair.Value; 
-                JsonConvert.PopulateObject(json, dataNodePair.Value, jsonSerializerSettings);
-            }
+                yield return dataNodePair.Value;
 
             foreach (var folderHolderPair in folderHolder.FolderHolders)
-            {
-                var fullPath = folderHolderPair.Key;
-                if (!string.IsNullOrEmpty(path))
-                    fullPath = path + '/' + fullPath;
-                LoadFolderHolder(folderHolderPair.Value, fullPath, data);
-            }
+                foreach (var dataNode in DataNodes(folderHolderPair.Value))
+                    yield return dataNode;
         }
-
+        
         public static T GetRuntimeModel<T>(string path, Func<T>? allocator = null) where T : class
         {
             T model;
