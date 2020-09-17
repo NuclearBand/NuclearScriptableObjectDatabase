@@ -13,6 +13,16 @@ namespace NuclearBand
 
         public string FullPath => $"{(string.IsNullOrEmpty(fullPath) ? string.Empty : $"{fullPath}/")}{name}";
 
+        public virtual void BeforeSave()
+        {
+            
+        }
+
+        public virtual void AfterLoad()
+        {
+            
+        }
+
 #if UNITY_EDITOR
         public void SetFullPath(string fullPath) => this.fullPath = fullPath;
 #endif
