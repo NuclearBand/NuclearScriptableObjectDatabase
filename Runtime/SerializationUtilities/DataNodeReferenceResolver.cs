@@ -1,33 +1,35 @@
 #nullable enable
 using System;
 using Newtonsoft.Json.Serialization;
-using NuclearBand;
 
-public class DataNodeReferenceResolver : IReferenceResolver
+namespace NuclearBand
 {
-    public static DataNode CurrentDataNode = null!;
-
-    public object ResolveReference(object context, string reference)
+    public class DataNodeReferenceResolver : IReferenceResolver
     {
-        try
+        public static DataNode CurrentDataNode = null!;
+
+        public object ResolveReference(object context, string reference)
         {
-            return SODatabase.GetModel<DataNode>(reference);
+            try
+            {
+                return SODatabase.GetModel<DataNode>(reference);
+            }
+            catch (Exception)
+            {
+                return null!;
+            }
         }
-        catch (Exception)
+
+        public string GetReference(object context, object value)
         {
-            return null!;
+            var dataNode = (DataNode) value;
+            return dataNode.FullPath;
         }
-    }
 
-    public string GetReference(object context, object value)
-    {
-        var dataNode = (DataNode) value;
-        return dataNode.FullPath;
-    }
+        public bool IsReferenced(object context, object value) => !ReferenceEquals(value, CurrentDataNode);
 
-    public bool IsReferenced(object context, object value) => !ReferenceEquals(value, CurrentDataNode);
-
-    public void AddReference(object context, string reference, object value)
-    {
+        public void AddReference(object context, string reference, object value)
+        {
+        }
     }
 }

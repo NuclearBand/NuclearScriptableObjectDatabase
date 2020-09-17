@@ -17,9 +17,18 @@ namespace NuclearBand
 
         private static FolderHolder root = null!;
 
+        private static Dictionary<string, object> runtimeModels = new Dictionary<string, object>();
+
         private static JsonSerializerSettings jsonSerializerSettings => new JsonSerializerSettings
         {
-            Formatting = Formatting.None,
+            Formatting = Formatting.Indented,
+            ReferenceResolverProvider = () => new DataNodeReferenceResolver()
+        };
+        
+        private static JsonSerializerSettings jsonRuntimeSerializerSettings => new JsonSerializerSettings
+        {
+            Formatting = Formatting.Indented,
+            TypeNameHandling = TypeNameHandling.All,
             ReferenceResolverProvider = () => new DataNodeReferenceResolver()
         };
 
@@ -120,9 +129,15 @@ namespace NuclearBand
 
         public static async Task SaveAsync()
         {
-            var res = SaveFolderHolder(root, string.Empty);
+            var save = new SODatabaseSaveFormat
+            {
+                StaticNodes = SaveFolderHolder(root, string.Empty)
+            };
+            foreach (var runtimeModelPair in runtimeModels)
+                save.RuntimeNodes.Add(runtimeModelPair.Key, JsonConvert.SerializeObject(runtimeModelPair.Value, jsonRuntimeSerializerSettings));
+            
             using var fileStream = new StreamWriter(SavePath);
-            await fileStream.WriteAsync(JsonConvert.SerializeObject(res));
+            await fileStream.WriteAsync(JsonConvert.SerializeObject(save));
         }
 
         static Dictionary<string, string> SaveFolderHolder(FolderHolder folderHolder, string path)
@@ -163,8 +178,14 @@ namespace NuclearBand
             
             using var fileStream = new StreamReader(SavePath);
             var serializedDictionary = await fileStream.ReadToEndAsync();
-            var dict = JsonConvert.DeserializeObject<Dictionary<string, string>>(serializedDictionary);
-            LoadFolderHolder(root, string.Empty, dict);
+            var save = JsonConvert.DeserializeObject<SODatabaseSaveFormat>(serializedDictionary);
+            LoadFolderHolder(root, string.Empty, save.StaticNodes);
+            runtimeModels.Clear();
+            foreach (var runtimeNodePair in save.RuntimeNodes)
+            {
+                var x = JsonConvert.DeserializeObject(runtimeNodePair.Value, jsonRuntimeSerializerSettings)!;
+                runtimeModels.Add(runtimeNodePair.Key, x);
+            }
         }
 
         static void LoadFolderHolder(FolderHolder folderHolder, string path, Dictionary<string, string> data)
@@ -188,6 +209,19 @@ namespace NuclearBand
                     fullPath = path + '/' + fullPath;
                 LoadFolderHolder(folderHolderPair.Value, fullPath, data);
             }
+        }
+
+        public static T GetRuntimeModel<T>(string path, Func<T>? allocator = null) where T : class
+        {
+            T model;
+            if (runtimeModels.ContainsKey(path))
+                model = (T) runtimeModels[path];
+            else
+            {
+                model = allocator!();
+                runtimeModels.Add(path, model);
+            }
+            return model;
         }
     }
 }
