@@ -16,6 +16,8 @@ namespace NuclearBand.Editor
 {
     public class ScriptableObjectDatabaseEditorWindow : OdinMenuEditorWindow
     {
+        public static event Action? OnSave;
+        
         private bool inSettings = false;
 
         [MenuItem("Tools/NuclearBand/ScriptableObjectDatabase")]
@@ -258,6 +260,7 @@ namespace NuclearBand.Editor
             });
 
             AssetDatabase.SaveAssets();
+            OnSave?.Invoke();
         }
 
         private static IEnumerable<OdinMenuItem> Flatten(IEnumerable<OdinMenuItem> collection)
