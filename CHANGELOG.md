@@ -1,3 +1,10 @@
+# [1.14.0](https://github.com/NuclearBand/UnityScriptableObjectDatabase/compare/v1.13.1...v1.14.0) (2020-09-22)
+
+
+### Features
+
+* OnSave event ([4b3d61e](https://github.com/NuclearBand/UnityScriptableObjectDatabase/commit/4b3d61ecfb47934671e840ace76a1931556a6047))
+
 ## [1.13.1](https://github.com/NuclearBand/UnityScriptableObjectDatabase/compare/v1.13.0...v1.13.1) (2020-09-17)
 
 
