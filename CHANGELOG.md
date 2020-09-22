@@ -1,3 +1,10 @@
+## [1.13.1](https://github.com/NuclearBand/UnityScriptableObjectDatabase/compare/v1.13.0...v1.13.1) (2020-09-17)
+
+
+### Bug Fixes
+
+* correct AfterLoad if no save ([f3fb9e4](https://github.com/NuclearBand/UnityScriptableObjectDatabase/commit/f3fb9e42c3de07ea665ea1fe35b9784a4cc04aac))
+
 # [1.13.0](https://github.com/NuclearBand/UnityScriptableObjectDatabase/compare/v1.12.0...v1.13.0) (2020-09-17)
 
 
