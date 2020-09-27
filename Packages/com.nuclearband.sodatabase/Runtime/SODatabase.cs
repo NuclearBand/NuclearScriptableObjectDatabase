@@ -22,7 +22,8 @@ namespace NuclearBand
         private static JsonSerializerSettings jsonSerializerSettings => new JsonSerializerSettings
         {
             Formatting = Formatting.Indented,
-            ReferenceResolverProvider = () => new DataNodeReferenceResolver()
+            ReferenceResolverProvider = () => new DataNodeReferenceResolver(),
+            ObjectCreationHandling = ObjectCreationHandling.Replace
         };
         
         private static JsonSerializerSettings jsonRuntimeSerializerSettings => new JsonSerializerSettings
