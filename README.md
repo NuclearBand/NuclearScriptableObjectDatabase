@@ -7,7 +7,7 @@ Unity 2020.1.4 or later (C# 8)
 ## Installation
 You can install via git url by adding this entry in your **manifest.json**
 ```
-"com.nuclearband.sodatabase": "https://github.com/Tr0sT/UnityScriptableObjectDatabase.git#upm"
+"com.nuclearband.sodatabase": "https://github.com/NuclearBand/UnityScriptableObjectDatabase.git#upm"
 ```
 The library depends on [Odin Inspector](https://odininspector.com/)
 
