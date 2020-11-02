@@ -5,7 +5,6 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
-using Sirenix.Utilities;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 
@@ -22,8 +21,9 @@ namespace NuclearBand
         private static JsonSerializerSettings jsonSerializerSettings => new JsonSerializerSettings
         {
             Formatting = Formatting.Indented,
+            TypeNameHandling = TypeNameHandling.All,
             ReferenceResolverProvider = () => new DataNodeReferenceResolver(),
-            ObjectCreationHandling = ObjectCreationHandling.Replace
+            ObjectCreationHandling = ObjectCreationHandling.Replace,
         };
         
         private static JsonSerializerSettings jsonRuntimeSerializerSettings => new JsonSerializerSettings
