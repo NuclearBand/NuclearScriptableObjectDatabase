@@ -1,3 +1,10 @@
+## [1.14.1](https://github.com/NuclearBand/UnityScriptableObjectDatabase/compare/v1.14.0...v1.14.1) (2020-09-27)
+
+
+### Bug Fixes
+
+* JsonConvert.PopulateObject for lists ([54ad94c](https://github.com/NuclearBand/UnityScriptableObjectDatabase/commit/54ad94ca70dde05214a1547c8480aea63c3c212f))
+
 # [1.14.0](https://github.com/NuclearBand/UnityScriptableObjectDatabase/compare/v1.13.1...v1.14.0) (2020-09-22)
 
 
