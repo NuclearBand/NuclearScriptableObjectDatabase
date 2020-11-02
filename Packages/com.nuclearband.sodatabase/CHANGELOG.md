@@ -1,3 +1,10 @@
+## [1.14.2](https://github.com/NuclearBand/UnityScriptableObjectDatabase/compare/v1.14.1...v1.14.2) (2020-11-02)
+
+
+### Bug Fixes
+
+* json serialization with typename handling all ([af8d865](https://github.com/NuclearBand/UnityScriptableObjectDatabase/commit/af8d8655c7404a2f54ee806449044230072a28bb))
+
 ## [1.14.1](https://github.com/NuclearBand/UnityScriptableObjectDatabase/compare/v1.14.0...v1.14.1) (2020-09-27)
 
 
