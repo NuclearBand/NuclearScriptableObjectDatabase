@@ -132,13 +132,3 @@ var playerSO = SODatabase.GetModel<PlayerSO>(PlayerSO.Path);
 var playerInventorySO = SODatabase.GetModel<PlayerInventorySO>(PlayerInventorySO.Path);
 var questNodes = SODatabase.GetModels<QuestNode>(QuestNode.Path, true);
 ```
-
-### Текущее состояние библиотеки
-
-В продакшене несколько лет использовался прообраз этой библиотеки - в ней аналогичное окно-проводник для создания/редактирования моделей, которые содержали статичные и динамические данные, но все эти модели не использовали SO, а были целиком в json. Из-за этого для каждой модели приходилось писать свой эдитор вручную, ссылки моделей друг на друга и игровые ассеты(спрайты и т.д.) делались довольно неудобными способами. Переход на SO совершён в прошлом году, и пока всего одна игра с SODatabase ушла в релиз, но в ней не использовались Addressables. 
-
-На addressables я перешёл совсем недавно для использования в текущем проекте (на разработку которой [я ищу в команду второго программиста](https://gamedev.ru/projects/forum/?id=254030) в партнёры). В данный момент идёт активное допиливание этой библиотеки под нужды этой игры.
-
-Библиотека лежит в открытом доступе на github. Написана с использованием Nullable из c# 8, соответственно требует Unity 2020.1.4 в качестве минимальной версиии.
-
-[https://github.com/NuclearBand/UnityScriptableObjectDatabase](https://github.com/NuclearBand/UnityScriptableObjectDatabase)
