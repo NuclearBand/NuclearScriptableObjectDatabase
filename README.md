@@ -12,8 +12,8 @@ You can install via git url by adding this entry in your **manifest.json**
 The library depends on [Odin Inspector](https://odininspector.com/)
 
 ## Documentation
-- [Documentation](https://github.com/NuclearBand/UnityScriptableObjectDatabase/blob/master/Packages/com.nuclearband.sodatabase/Documentation/Documentation.en.md)
-- [Документация](https://github.com/NuclearBand/UnityScriptableObjectDatabase/blob/master/Packages/com.nuclearband.sodatabase/Documentation/Documentation.ru.md)
+- [Documentation](https://github.com/NuclearBand/UnityScriptableObjectDatabase/tree/master/Assets/com.nuclearband.sodatabase/Documentation/Documentation.en.md)
+- [Документация](https://github.com/NuclearBand/UnityScriptableObjectDatabase/tree/master/Assets/com.nuclearband.sodatabase/Documentation/Documentation.ru.md)
 
 ## Contributing
 
