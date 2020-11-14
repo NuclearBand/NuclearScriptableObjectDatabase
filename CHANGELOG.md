@@ -1,3 +1,10 @@
+## [1.15.1](https://github.com/NuclearBand/UnityScriptableObjectDatabase/compare/v1.15.0...v1.15.1) (2020-11-14)
+
+
+### Bug Fixes
+
+* semantic release6 ([a383b2d](https://github.com/NuclearBand/UnityScriptableObjectDatabase/commit/a383b2dc4bd7bddfb2a82c8247802446b1745c49))
+
 # [1.15.0](https://github.com/NuclearBand/UnityScriptableObjectDatabase/compare/v1.14.2...v1.15.0) (2020-11-14)
 
 
