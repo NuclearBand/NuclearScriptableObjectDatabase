@@ -13,6 +13,6 @@ obj/*
 .gradle/*
 *.aab
 Logs/*
-Assets/*
 UserSettings/*
+Assets/Plugins/Sirenix/*
 
