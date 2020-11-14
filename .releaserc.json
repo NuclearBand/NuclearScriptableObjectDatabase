@@ -7,6 +7,7 @@
     ["@semantic-release/changelog", {
       "changelogFile": "Assets/com.nuclearband.sodatabase/CHANGELOG.md"
     }],
+    ["@semantic-release/npm", { "npmPublish": false, "pkgRoot": "Assets/com.nuclearband.sodatabase" }],
     ["@semantic-release/git", {
       "assets": ["Assets/com.nuclearband.sodatabase/package.json", "Assets/com.nuclearband.sodatabase/CHANGELOG.md"],
       "message": "chore(release): ${nextRelease.version} [skip ci]\n\n${nextRelease.notes}"
