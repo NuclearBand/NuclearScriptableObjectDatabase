@@ -1,3 +1,10 @@
+## [1.15.2](https://github.com/NuclearBand/UnityScriptableObjectDatabase/compare/v1.15.1...v1.15.2) (2020-11-14)
+
+
+### Bug Fixes
+
+* fix git ignore ([101a7ca](https://github.com/NuclearBand/UnityScriptableObjectDatabase/commit/101a7ca66c07231de3b861f35a3219ed437bf3bf))
+
 ## [1.15.1](https://github.com/NuclearBand/UnityScriptableObjectDatabase/compare/v1.15.0...v1.15.1) (2020-11-14)
 
 
