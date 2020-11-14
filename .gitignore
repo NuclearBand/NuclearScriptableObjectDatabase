@@ -14,3 +14,5 @@ obj/*
 *.aab
 Logs/*
 Assets/*
+UserSettings/*
+

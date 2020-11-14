@@ -1,20 +1,5 @@
 {
   "dependencies": {
-    "com.nuclearband.sodatabase": {
-      "version": "file:com.nuclearband.sodatabase",
-      "depth": 0,
-      "source": "embedded",
-      "dependencies": {
-        "com.unity.addressables": "1.7.5",
-        "com.unity.nuget.newtonsoft-json": "2.0.0"
-      }
-    },
-    "com.unity.2d.sprite": {
-      "version": "1.0.0",
-      "depth": 0,
-      "source": "builtin",
-      "dependencies": {}
-    },
     "com.unity.addressables": {
       "version": "1.14.2",
       "depth": 0,
@@ -44,7 +29,7 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.ide.visualstudio": {
-      "version": "2.0.3",
+      "version": "2.0.5",
       "depth": 0,
       "source": "registry",
       "dependencies": {},

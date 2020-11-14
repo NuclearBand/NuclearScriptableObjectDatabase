@@ -1,1 +1,0 @@
-# Scriptable Object Database
