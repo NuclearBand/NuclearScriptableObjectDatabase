@@ -1,3 +1,10 @@
+# [1.16.0](https://github.com/NuclearBand/UnityScriptableObjectDatabase/compare/v1.15.3...v1.16.0) (2022-01-11)
+
+
+### Features
+
+* remove nodes confirmation ([2632885](https://github.com/NuclearBand/UnityScriptableObjectDatabase/commit/2632885f52f0ad34bd4829228ffc866fa73bd7c2))
+
 ## [1.15.3](https://github.com/NuclearBand/UnityScriptableObjectDatabase/compare/v1.15.2...v1.15.3) (2020-11-14)
 
 
