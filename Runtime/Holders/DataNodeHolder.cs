@@ -7,7 +7,7 @@ namespace NuclearBand
 {
     public class DataNodeHolder : Holder
     {
-        [InlineEditor(InlineEditorObjectFieldModes.CompletelyHidden)] 
+        [InlineEditor(InlineEditorObjectFieldModes.CompletelyHidden)]
         public DataNode DataNode;
 
         public DataNodeHolder(string path, string name, DataNode dataNode) : base(path, name)
@@ -39,9 +39,13 @@ namespace NuclearBand
                 AssetDatabase.GenerateUniqueAssetPath(SODatabaseSettings.Path + Path + "/" + Name + ".asset"));
             AssetDatabase.SaveAssets();
         }
-    
+
         protected override void Remove()
         {
+            if (!EditorUtility.DisplayDialog("Remove node",
+                    "Are you sure you want to remove DataNode?", "Yes, remove", "No"))
+                return;
+
             AssetDatabase.Refresh();
             AssetDatabase.DeleteAsset(SODatabaseSettings.Path + Path + "/" + Name + ".asset");
             AssetDatabase.SaveAssets();

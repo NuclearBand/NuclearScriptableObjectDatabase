@@ -50,6 +50,9 @@ namespace NuclearBand
 
         protected override void Remove()
         {
+            if (!EditorUtility.DisplayDialog("Remove folder",
+                    "Are you sure you want to remove folder with DataNodes?", "Yes, remove", "No"))
+                return;
             SODatabaseInternal.RemoveFolder(Path + "/" + Name);
         }
 #endif
