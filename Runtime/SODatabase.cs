@@ -55,7 +55,14 @@ namespace NuclearBand
 #pragma warning restore 4014
             var resourceLocations = await loadHandler.Task;
 
-            var loadTasks = resourceLocations.ToDictionary(resourceLocation => resourceLocation.PrimaryKey.Substring(SODatabaseSettings.Path.Length), resourceLocation => Addressables.LoadAssetAsync<DataNode>(resourceLocation).Task);
+            var loadTasks = new Dictionary<string, Task<DataNode>>();
+            foreach (var resourceLocation in resourceLocations)
+            {
+                var key = resourceLocation.PrimaryKey.Substring(SODatabaseSettings.Path.Length);
+                if (!resourceLocation.ResourceType.IsSubclassOf(typeof(DataNode)) || loadTasks.ContainsKey(key))
+                    continue;
+                loadTasks.Add(key, Addressables.LoadAssetAsync<DataNode>(resourceLocation).Task);
+            }
             await Task.WhenAll(loadTasks.Values);
             root = new FolderHolder();
             foreach (var loadTask in loadTasks)
@@ -71,7 +78,7 @@ namespace NuclearBand
                     curFolder = curFolder.FolderHolders[pathElements[i]];
                 }
 
-                var dataNodeName = pathElements[pathElements.Length - 1];
+                var dataNodeName = pathElements[^1];
                 dataNodeName = dataNodeName.Substring(0, dataNodeName.IndexOf(".asset", StringComparison.Ordinal));
                 curFolder.DataNodes.Add(dataNodeName, loadTask.Value.Result);
             }
