@@ -753,7 +753,7 @@ PlayerSettings:
   webGLThreadsSupport: 0
   webGLDecompressionFallback: 0
   scriptingDefineSymbols:
-    Android: ODIN_INSPECTOR
+    Android: ODIN_INSPECTOR;ODIN_INSPECTOR_3
     Standalone: ODIN_INSPECTOR
   additionalCompilerArguments: {}
   platformArchitecture: {}
@@ -799,6 +799,7 @@ PlayerSettings:
   metroFTAName: 
   metroFTAFileTypes: []
   metroProtocolName: 
+  vcxProjDefaultLanguage: 
   XboxOneProductId: 
   XboxOneUpdateKey: 
   XboxOneSandboxId: 
