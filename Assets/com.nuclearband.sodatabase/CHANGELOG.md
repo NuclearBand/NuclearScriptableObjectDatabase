@@ -1,3 +1,10 @@
+## [1.16.1](https://github.com/NuclearBand/UnityScriptableObjectDatabase/compare/v1.16.0...v1.16.1) (2022-05-10)
+
+
+### Bug Fixes
+
+* addressables new version bug - duplicate load ([6711ba2](https://github.com/NuclearBand/UnityScriptableObjectDatabase/commit/6711ba2e815b9419da0303a6bda7758731934dda))
+
 # [1.16.0](https://github.com/NuclearBand/UnityScriptableObjectDatabase/compare/v1.15.3...v1.16.0) (2022-01-11)
 
 
