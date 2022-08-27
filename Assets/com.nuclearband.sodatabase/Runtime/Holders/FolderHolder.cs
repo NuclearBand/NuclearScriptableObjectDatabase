@@ -10,10 +10,10 @@ namespace NuclearBand
     public class FolderHolder : Holder
     {
         [HideInInspector]
-        public Dictionary<string, DataNode> DataNodes = new Dictionary<string, DataNode>();
+        public Dictionary<string, DataNode> DataNodes = new();
         
         [HideInInspector]
-        public Dictionary<string, FolderHolder> FolderHolders = new Dictionary<string, FolderHolder>();
+        public Dictionary<string, FolderHolder> FolderHolders = new();
 
         public FolderHolder() : base()
         {
