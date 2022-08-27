@@ -1,3 +1,10 @@
+# [1.17.0](https://github.com/NuclearBand/UnityScriptableObjectDatabase/compare/v1.16.1...v1.17.0) (2022-08-27)
+
+
+### Features
+
+* backup save ([20b617d](https://github.com/NuclearBand/UnityScriptableObjectDatabase/commit/20b617d8fbde4bb3e8a6e850c5ff405cba9ad8aa))
+
 ## [1.16.1](https://github.com/NuclearBand/UnityScriptableObjectDatabase/compare/v1.16.0...v1.16.1) (2022-05-10)
 
 
