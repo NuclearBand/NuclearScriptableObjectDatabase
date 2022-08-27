@@ -13,12 +13,15 @@ namespace NuclearBand
     public static class SODatabase
     {
         public static string SavePath => Application.persistentDataPath + @"/save.txt";
+        public static string SaveBakPath => Application.persistentDataPath + @"/save.bak";
 
         private static FolderHolder root = null!;
 
-        private static Dictionary<string, object> runtimeModels = new Dictionary<string, object>();
+        private static readonly Dictionary<string, object> runtimeModels = new();
 
-        private static JsonSerializerSettings jsonSerializerSettings => new JsonSerializerSettings
+        private static bool saving = false;
+        
+        private static JsonSerializerSettings jsonSerializerSettings => new()
         {
             Formatting = Formatting.Indented,
             TypeNameHandling = TypeNameHandling.All,
@@ -26,7 +29,7 @@ namespace NuclearBand
             ObjectCreationHandling = ObjectCreationHandling.Replace,
         };
         
-        private static JsonSerializerSettings jsonRuntimeSerializerSettings => new JsonSerializerSettings
+        private static JsonSerializerSettings jsonRuntimeSerializerSettings => new()
         {
             Formatting = Formatting.Indented,
             TypeNameHandling = TypeNameHandling.All,
@@ -137,6 +140,13 @@ namespace NuclearBand
 
         public static async Task SaveAsync()
         {
+            if (saving)
+                return;
+            
+            saving = true;
+            if (File.Exists(SavePath))
+                File.Copy(SavePath, SaveBakPath, true);
+            
             var staticNodes = new Dictionary<string, string>();
             foreach (var dataNode in DataNodes(root))
             {
@@ -155,6 +165,7 @@ namespace NuclearBand
             
             using var fileStream = new StreamWriter(SavePath);
             await fileStream.WriteAsync(JsonConvert.SerializeObject(save));
+            saving = false;
         }
 
         public static async void Load()
@@ -169,27 +180,50 @@ namespace NuclearBand
                     dataNode.AfterLoad();
                 return;
             }
-            
-            using var fileStream = new StreamReader(SavePath);
-            var serializedDictionary = await fileStream.ReadToEndAsync();
-            var save = JsonConvert.DeserializeObject<SODatabaseSaveFormat>(serializedDictionary);
-            
-            foreach (var dataNode in DataNodes(root))
+
+            do
             {
-                DataNodeReferenceResolver.CurrentDataNode = dataNode;
-                var json = save.StaticNodes.ContainsKey(dataNode.FullPath) ? save.StaticNodes[dataNode.FullPath] : string.Empty;
-                if (string.IsNullOrEmpty(json))
-                    continue;
-                DataNodeReferenceResolver.CurrentDataNode = dataNode; 
-                JsonConvert.PopulateObject(json, dataNode, jsonSerializerSettings);
-            }
-            
-            runtimeModels.Clear();
-            foreach (var runtimeNodePair in save.RuntimeNodes)
-            {
-                var x = JsonConvert.DeserializeObject(runtimeNodePair.Value, jsonRuntimeSerializerSettings)!;
-                runtimeModels.Add(runtimeNodePair.Key, x);
-            }
+                try
+                {
+                    using var fileStream = new StreamReader(SavePath);
+                    var serializedDictionary = await fileStream.ReadToEndAsync();
+                    var save = JsonConvert.DeserializeObject<SODatabaseSaveFormat>(serializedDictionary);
+                    if (save == null)
+                        throw new Exception();
+
+                    foreach (var dataNode in DataNodes(root))
+                    {
+                        DataNodeReferenceResolver.CurrentDataNode = dataNode;
+                        var json = save.StaticNodes.ContainsKey(dataNode.FullPath)
+                            ? save.StaticNodes[dataNode.FullPath]
+                            : string.Empty;
+                        if (string.IsNullOrEmpty(json))
+                            continue;
+                        DataNodeReferenceResolver.CurrentDataNode = dataNode;
+                        JsonConvert.PopulateObject(json, dataNode, jsonSerializerSettings);
+                    }
+
+                    runtimeModels.Clear();
+                    foreach (var runtimeNodePair in save.RuntimeNodes)
+                    {
+                        var x = JsonConvert.DeserializeObject(runtimeNodePair.Value, jsonRuntimeSerializerSettings)!;
+                        runtimeModels.Add(runtimeNodePair.Key, x);
+                    }
+
+                    break;
+                }
+                catch (Exception)
+                {
+                    if (File.Exists(SaveBakPath))
+                    {
+                        File.Copy(SaveBakPath, SavePath, true);
+                        File.Delete(SaveBakPath);
+                        continue;
+                    }
+
+                    break;
+                }
+            } while (true);
 
             foreach (var dataNode in DataNodes(root))
                 dataNode.AfterLoad();
