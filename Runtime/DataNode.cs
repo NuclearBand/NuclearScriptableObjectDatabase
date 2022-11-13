@@ -9,9 +9,9 @@ namespace NuclearBand
     public class DataNode : SerializedScriptableObject
     {
         [SerializeField, HideInInspector]
-        private string fullPath = string.Empty;
+        private string _fullPath = string.Empty;
 
-        public string FullPath => $"{(string.IsNullOrEmpty(fullPath) ? string.Empty : $"{fullPath}/")}{name}";
+        public string FullPath => $"{(string.IsNullOrEmpty(_fullPath) ? string.Empty : $"{_fullPath}/")}{name}";
 
         public virtual void BeforeSave()
         {
@@ -24,7 +24,7 @@ namespace NuclearBand
         }
 
 #if UNITY_EDITOR
-        public void SetFullPath(string fullPath) => this.fullPath = fullPath;
+        public void SetFullPath(string fullPath) => _fullPath = fullPath;
 #endif
     }
 }

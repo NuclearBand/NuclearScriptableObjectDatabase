@@ -17,9 +17,8 @@ namespace NuclearBand
 
         public FolderHolder() : base()
         {
-            
         }
-        
+
 #if UNITY_EDITOR
         public FolderHolder(string path, string name) : base(path, name)
         {
@@ -28,15 +27,15 @@ namespace NuclearBand
         protected override void Move()
         {
             AssetDatabase.Refresh();
-            AssetDatabase.MoveAsset(SODatabaseSettings.Path + Path + "/" + Name, SODatabaseSettings.Path + tempPath + "/" + Name);
+            AssetDatabase.MoveAsset(SODatabaseSettings.Path + Path + "/" + Name, SODatabaseSettings.Path + TempPath + "/" + Name);
             AssetDatabase.SaveAssets();
         }
 
         protected override void Rename()
         {
             AssetDatabase.Refresh();
-            AssetDatabase.RenameAsset(SODatabaseSettings.Path + Path + "/" + Name, tempName);
-            Name = tempName;
+            AssetDatabase.RenameAsset(SODatabaseSettings.Path + Path + "/" + Name, TempName);
+            Name = TempName;
             AssetDatabase.SaveAssets();
         }
 

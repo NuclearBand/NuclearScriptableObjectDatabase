@@ -10,8 +10,8 @@ namespace NuclearBand
     {
         protected Holder()
         {
-            
         }
+
 #if UNITY_EDITOR
         [HideInInspector]
         public string Path = string.Empty;
@@ -20,10 +20,10 @@ namespace NuclearBand
 
         [ShowInInspector]
         [HorizontalGroup("Path")]
-        protected string tempPath = string.Empty;
+        protected string TempPath = string.Empty;
         [ShowInInspector]
         [HorizontalGroup("Name")]
-        protected string tempName = string.Empty;
+        protected string TempName = string.Empty;
 
         public Holder(string path, string name)
         {
@@ -33,17 +33,17 @@ namespace NuclearBand
 
         public virtual void Select()
         {
-            tempPath = Path;
-            tempName = Name;
+            TempPath = Path;
+            TempName = Name;
         }
 
         [HorizontalGroup("Path")]
-        [ShowIf("@Path != tempPath")]
+        [ShowIf("@Path != _tempPath")]
         [Button]
         protected abstract void Move();
     
         [HorizontalGroup("Name")]
-        [ShowIf("@Name != tempName")]
+        [ShowIf("@Name != _tempName")]
         [Button]
         protected abstract void Rename();
         

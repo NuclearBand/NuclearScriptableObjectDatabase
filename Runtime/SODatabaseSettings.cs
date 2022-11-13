@@ -1,5 +1,6 @@
 #nullable enable
 using System;
+using System.Collections.Generic;
 using Sirenix.OdinInspector;
 using UnityEngine;
 #if UNITY_EDITOR
@@ -10,27 +11,27 @@ namespace NuclearBand
 {
     public class SODatabaseSettings : SerializedScriptableObject
     {
-        private static SODatabaseSettings? instance;
+        private static SODatabaseSettings? _instance;
 
         public static SODatabaseSettings Instance
         {
             get
             {
-                if (instance == null)
-                    instance = Resources.Load<SODatabaseSettings>("SODatabaseSettings");
+                if (_instance == null)
+                    _instance = Resources.Load<SODatabaseSettings>("SODatabaseSettings");
 #if UNITY_EDITOR
-                if (instance == null)
+                if (_instance == null)
                 {
                     AssetDatabase.Refresh();
-                    instance = CreateInstance<SODatabaseSettings>();
+                    _instance = CreateInstance<SODatabaseSettings>();
                     AssetDatabase.CreateFolder("Assets", "SODatabase");
                     AssetDatabase.CreateFolder("Assets/SODatabase", "Resources");
                     const string destination = "Assets/SODatabase/Resources/";
-                    AssetDatabase.CreateAsset(instance, (destination + "SODatabaseSettings.asset"));
+                    AssetDatabase.CreateAsset(_instance, (destination + "SODatabaseSettings.asset"));
                     AssetDatabase.SaveAssets();
                 }
 #endif
-                return instance;
+                return _instance;
             }
         }
 
@@ -52,8 +53,10 @@ namespace NuclearBand
         [NonSerialized, ShowInInspector]
         public string SavePath = string.Empty;
 
+        public Dictionary<Type, Texture> NodeIcons = new();
+
         [Button]
-        void Save()
+        private void Save()
         {
             path = SavePath + "/";
         }

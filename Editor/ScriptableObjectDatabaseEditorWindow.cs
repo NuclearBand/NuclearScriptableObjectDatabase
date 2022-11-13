@@ -18,7 +18,7 @@ namespace NuclearBand.Editor
     {
         public static event Action? OnSave;
         
-        private bool inSettings = false;
+        private bool _inSettings;
 
         [MenuItem("Tools/NuclearBand/ScriptableObjectDatabase")]
         private static void Open()
@@ -67,14 +67,28 @@ namespace NuclearBand.Editor
 
             if (SODatabaseSettings.Path == string.Empty)
             {
-                inSettings = true;
+                _inSettings = true;
                 tree.AddMenuItemAtPath(new HashSet<OdinMenuItem>(), string.Empty, new OdinMenuItem(tree, "Settings", SODatabaseSettings.Instance));
                 return tree;
             }
 
             AddAllAssetsAtPath(tree, SODatabaseSettings.Path, typeof(DataNode));
             Texture folderIcon = (Texture2D) AssetDatabase.LoadAssetAtPath("Packages/com.nuclearband.sodatabase/Editor/folderIcon.png", typeof(Texture2D));
-            tree.EnumerateTree().AddIcons<FolderHolder>(x => folderIcon);
+            tree.EnumerateTree().AddIcons(odinMenuItem =>
+            {
+                if (odinMenuItem.Value is FolderHolder)
+                {
+                    return folderIcon;
+                }
+
+                var dataNodeType = ((DataNodeHolder) odinMenuItem.Value).DataNode.GetType();
+                if (SODatabaseSettings.Instance.NodeIcons.ContainsKey(dataNodeType))
+                {
+                    return SODatabaseSettings.Instance.NodeIcons[dataNodeType];
+                }
+
+                return null;
+            });
             tree.SortMenuItemsByName();
             tree.Selection.SelectionChanged += SelectionChanged;
             return tree;
@@ -133,7 +147,7 @@ namespace NuclearBand.Editor
                     continue;
                 }
 
-                var withoutExtension = System.IO.Path.GetFileNameWithoutExtension(str1);
+                var withoutExtension = Path.GetFileNameWithoutExtension(str1);
 
                 str2 = (PathUtilities.GetDirectoryName(str1).TrimEnd('/') + "/").Substring(assetFolderPath.Length);
                 if (str2.Length != 0)
@@ -167,7 +181,7 @@ namespace NuclearBand.Editor
 
         protected override void OnBeginDrawEditors()
         {
-            if (inSettings)
+            if (_inSettings)
             {
                 base.OnBeginDrawEditors();
                 if (SODatabaseSettings.Path != string.Empty)
