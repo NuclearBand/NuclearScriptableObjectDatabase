@@ -15,20 +15,19 @@ namespace NuclearBand
             DataNode = dataNode;
         }
 
-
         protected override void Move()
         {
             AssetDatabase.Refresh();
             AssetDatabase.MoveAsset(SODatabaseSettings.Path + Path + "/" + Name + ".asset",
-                SODatabaseSettings.Path + tempPath + "/" + Name + ".asset");
+                SODatabaseSettings.Path + TempPath + "/" + Name + ".asset");
             AssetDatabase.SaveAssets();
         }
 
         protected override void Rename()
         {
             AssetDatabase.Refresh();
-            AssetDatabase.RenameAsset(SODatabaseSettings.Path + Path + "/" + Name + ".asset", tempName + ".asset");
-            Name = tempName;
+            AssetDatabase.RenameAsset(SODatabaseSettings.Path + Path + "/" + Name + ".asset", TempName + ".asset");
+            Name = TempName;
             AssetDatabase.SaveAssets();
         }
 

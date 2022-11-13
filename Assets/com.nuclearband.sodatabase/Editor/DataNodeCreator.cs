@@ -30,14 +30,14 @@ namespace NuclearBand.Editor
 
         private class ScriptableObjectSelector<T> : OdinSelector<Type> where T : ScriptableObject
         {
-            private readonly Action<T>? onScriptableObjectCreated;
-            private readonly string defaultDestinationPath;
+            private readonly Action<T>? _onScriptableObjectCreated;
+            private readonly string _defaultDestinationPath;
 
             public ScriptableObjectSelector(string defaultDestinationPath, Action<T>? onScriptableObjectCreated = null)
             {
-                this.onScriptableObjectCreated = onScriptableObjectCreated;
-                this.defaultDestinationPath = defaultDestinationPath;
-                this.SelectionConfirmed += this.Save;
+                _onScriptableObjectCreated = onScriptableObjectCreated;
+                _defaultDestinationPath = defaultDestinationPath;
+                SelectionConfirmed += Save;
             }
 
             protected override void BuildSelectionTree(OdinMenuTree tree)
@@ -55,15 +55,14 @@ namespace NuclearBand.Editor
             {
                 var obj = (ScriptableObject.CreateInstance(selection.FirstOrDefault()) as T)!;
 
-                var dest = this.defaultDestinationPath.TrimEnd('/');
+                var dest = _defaultDestinationPath.TrimEnd('/');
 
                 AssetDatabase.CreateAsset(obj, AssetDatabase.GenerateUniqueAssetPath(dest + "/" + "New.asset"));
                 AssetDatabase.Refresh();
 
-                onScriptableObjectCreated?.Invoke(obj);
+                _onScriptableObjectCreated?.Invoke(obj);
             }
         }
     }
 }
-
 #endif

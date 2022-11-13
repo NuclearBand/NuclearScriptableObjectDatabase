@@ -15,13 +15,13 @@ namespace NuclearBand
         public static string SavePath => Application.persistentDataPath + @"/save.txt";
         public static string SaveBakPath => Application.persistentDataPath + @"/save.bak";
 
-        private static FolderHolder root = null!;
+        private static FolderHolder _root = null!;
 
-        private static readonly Dictionary<string, object> runtimeModels = new();
+        private static readonly Dictionary<string, object> RuntimeModels = new();
 
-        private static bool saving = false;
+        private static bool _saving;
         
-        private static JsonSerializerSettings jsonSerializerSettings => new()
+        private static JsonSerializerSettings JsonSerializerSettings => new()
         {
             Formatting = Formatting.Indented,
             TypeNameHandling = TypeNameHandling.All,
@@ -29,7 +29,7 @@ namespace NuclearBand
             ObjectCreationHandling = ObjectCreationHandling.Replace,
         };
         
-        private static JsonSerializerSettings jsonRuntimeSerializerSettings => new()
+        private static JsonSerializerSettings JsonRuntimeSerializerSettings => new()
         {
             Formatting = Formatting.Indented,
             TypeNameHandling = TypeNameHandling.All,
@@ -67,12 +67,12 @@ namespace NuclearBand
                 loadTasks.Add(key, Addressables.LoadAssetAsync<DataNode>(resourceLocation).Task);
             }
             await Task.WhenAll(loadTasks.Values);
-            root = new FolderHolder();
+            _root = new FolderHolder();
             foreach (var loadTask in loadTasks)
             {
                 //SODatabase/Example1Folder/Example1.asset
                 var pathElements = loadTask.Key.Split('/');
-                var curFolder = root;
+                var curFolder = _root;
                 for (var i = 0; i < pathElements.Length - 1; i++)
                 {
                     if (!curFolder.FolderHolders.ContainsKey(pathElements[i]))
@@ -89,7 +89,7 @@ namespace NuclearBand
             CallAction(onComplete);
         }
 
-        static async void CallAction(Action? action)
+        private static async void CallAction(Action? action)
         {
             action?.Invoke();
             await Task.CompletedTask;
@@ -98,7 +98,7 @@ namespace NuclearBand
         public static T GetModel<T>(string path) where T : DataNode
         {
             var pathElements = path.Split('/');
-            var curFolder = root;
+            var curFolder = _root;
             for (var i = 0; i < pathElements.Length - 1; i++)
                 curFolder = curFolder.FolderHolders[pathElements[i]];
 
@@ -109,7 +109,7 @@ namespace NuclearBand
         public static List<T> GetModels<T>(string path, bool includeSubFolders = false) where T : DataNode
         {
             var pathElements = path.Split('/');
-            var curFolder = root;
+            var curFolder = _root;
             if (path != string.Empty)
                 for (var i = 0; i < pathElements.Length; i++)
                 {
@@ -140,19 +140,19 @@ namespace NuclearBand
 
         public static async Task SaveAsync()
         {
-            if (saving)
+            if (_saving)
                 return;
             
-            saving = true;
+            _saving = true;
             if (File.Exists(SavePath))
                 File.Copy(SavePath, SaveBakPath, true);
             
             var staticNodes = new Dictionary<string, string>();
-            foreach (var dataNode in DataNodes(root))
+            foreach (var dataNode in DataNodes(_root))
             {
                 DataNodeReferenceResolver.CurrentDataNode = dataNode;
                 dataNode.BeforeSave();
-                var json = JsonConvert.SerializeObject(dataNode, jsonSerializerSettings);
+                var json = JsonConvert.SerializeObject(dataNode, JsonSerializerSettings);
                 staticNodes.Add(dataNode.FullPath, json);
             }
             
@@ -160,12 +160,12 @@ namespace NuclearBand
             {
                 StaticNodes = staticNodes
             };
-            foreach (var runtimeModelPair in runtimeModels) 
-                save.RuntimeNodes.Add(runtimeModelPair.Key, JsonConvert.SerializeObject(runtimeModelPair.Value, jsonRuntimeSerializerSettings));
+            foreach (var runtimeModelPair in RuntimeModels) 
+                save.RuntimeNodes.Add(runtimeModelPair.Key, JsonConvert.SerializeObject(runtimeModelPair.Value, JsonRuntimeSerializerSettings));
             
             using var fileStream = new StreamWriter(SavePath);
             await fileStream.WriteAsync(JsonConvert.SerializeObject(save));
-            saving = false;
+            _saving = false;
         }
 
         public static async void Load()
@@ -176,7 +176,7 @@ namespace NuclearBand
         public static async Task LoadAsync()
         {
             if (!File.Exists(SavePath)) {
-                foreach (var dataNode in DataNodes(root))
+                foreach (var dataNode in DataNodes(_root))
                     dataNode.AfterLoad();
                 return;
             }
@@ -191,7 +191,7 @@ namespace NuclearBand
                     if (save == null)
                         throw new Exception();
 
-                    foreach (var dataNode in DataNodes(root))
+                    foreach (var dataNode in DataNodes(_root))
                     {
                         DataNodeReferenceResolver.CurrentDataNode = dataNode;
                         var json = save.StaticNodes.ContainsKey(dataNode.FullPath)
@@ -200,14 +200,14 @@ namespace NuclearBand
                         if (string.IsNullOrEmpty(json))
                             continue;
                         DataNodeReferenceResolver.CurrentDataNode = dataNode;
-                        JsonConvert.PopulateObject(json, dataNode, jsonSerializerSettings);
+                        JsonConvert.PopulateObject(json, dataNode, JsonSerializerSettings);
                     }
 
-                    runtimeModels.Clear();
+                    RuntimeModels.Clear();
                     foreach (var runtimeNodePair in save.RuntimeNodes)
                     {
-                        var x = JsonConvert.DeserializeObject(runtimeNodePair.Value, jsonRuntimeSerializerSettings)!;
-                        runtimeModels.Add(runtimeNodePair.Key, x);
+                        var x = JsonConvert.DeserializeObject(runtimeNodePair.Value, JsonRuntimeSerializerSettings)!;
+                        RuntimeModels.Add(runtimeNodePair.Key, x);
                     }
 
                     break;
@@ -225,7 +225,7 @@ namespace NuclearBand
                 }
             } while (true);
 
-            foreach (var dataNode in DataNodes(root))
+            foreach (var dataNode in DataNodes(_root))
                 dataNode.AfterLoad();
         }
         private static IEnumerable<DataNode> DataNodes(FolderHolder folderHolder)
@@ -241,12 +241,12 @@ namespace NuclearBand
         public static T GetRuntimeModel<T>(string path, Func<T>? allocator = null) where T : class
         {
             T model;
-            if (runtimeModels.ContainsKey(path))
-                model = (T) runtimeModels[path];
+            if (RuntimeModels.ContainsKey(path))
+                model = (T) RuntimeModels[path];
             else
             {
                 model = allocator!();
-                runtimeModels.Add(path, model);
+                RuntimeModels.Add(path, model);
             }
             return model;
         }

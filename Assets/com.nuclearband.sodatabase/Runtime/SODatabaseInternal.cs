@@ -50,7 +50,10 @@ namespace NuclearBand
                 var model = GetModelForEdit<T>(path + "/" + name);
                 return model;
             }
-            catch{}
+             catch
+            {
+                // ignored
+            }
 
             AssetDatabase.Refresh();
             CreateFolder(path);

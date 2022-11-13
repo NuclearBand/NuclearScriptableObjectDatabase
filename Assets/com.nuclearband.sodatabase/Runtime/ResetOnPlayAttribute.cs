@@ -22,7 +22,7 @@ namespace NuclearBand
             EditorApplication.playModeStateChanged += ModeChanged;
         }
 
-        static void ModeChanged(PlayModeStateChange playModeStateChange)
+        private static void ModeChanged(PlayModeStateChange playModeStateChange)
         {
             if (playModeStateChange != PlayModeStateChange.EnteredEditMode) 
                 return;

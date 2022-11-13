@@ -20,6 +20,26 @@ MonoBehaviour:
     Prefab: {fileID: 0}
     PrefabModificationsReferencedUnityObjects: []
     PrefabModifications: []
-    SerializationNodes: []
-  path: Assets/SODatabaseModels/
+    SerializationNodes:
+    - Name: NodeIcons
+      Entry: 7
+      Data: 0|System.Collections.Generic.Dictionary`2[[System.Type, mscorlib],[UnityEngine.Texture,
+        UnityEngine.CoreModule]], mscorlib
+    - Name: comparer
+      Entry: 7
+      Data: 1|System.Collections.Generic.ObjectEqualityComparer`1[[System.Type, mscorlib]],
+        mscorlib
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 12
+      Data: 0
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+  path: 
   label: SODatabase
