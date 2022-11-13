@@ -1,3 +1,10 @@
+# [1.18.0](https://github.com/NuclearBand/UnityScriptableObjectDatabase/compare/v1.17.0...v1.18.0) (2022-11-13)
+
+
+### Features
+
+* tree icons to DataNodes ([7055419](https://github.com/NuclearBand/UnityScriptableObjectDatabase/commit/70554198626c8c9b9b001f0e3bcb42ebc27e42c0))
+
 # [1.17.0](https://github.com/NuclearBand/UnityScriptableObjectDatabase/compare/v1.16.1...v1.17.0) (2022-08-27)
 
 
