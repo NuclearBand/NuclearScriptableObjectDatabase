@@ -53,6 +53,8 @@ namespace NuclearBand
         [NonSerialized, ShowInInspector]
         public string SavePath = string.Empty;
 
+        // ReSharper disable once CollectionNeverUpdated.Global
+        // ReSharper disable once FieldCanBeMadeReadOnly.Global
         public Dictionary<Type, Texture> NodeIcons = new();
 
         [Button]

@@ -10,6 +10,7 @@ namespace NuclearBand
 {
     public static class SODatabaseInternal
     {
+        // ReSharper disable once MemberCanBePrivate.Global
         public static T GetModelForEdit<T>(string path) where T : DataNode
         {
             return AssetDatabase.LoadAssetAtPath<T>(SODatabaseSettings.Path + path + ".asset") ??
@@ -24,6 +25,7 @@ namespace NuclearBand
             return modelGUIDs.Select(model => AssetDatabase.LoadAssetAtPath<T>(AssetDatabase.GUIDToAssetPath(model))).ToList();
         }
 
+        // ReSharper disable once MemberCanBePrivate.Global
         public static void CreateFolder(string path)
         {
             AssetDatabase.Refresh();
@@ -50,7 +52,7 @@ namespace NuclearBand
                 var model = GetModelForEdit<T>(path + "/" + name);
                 return model;
             }
-             catch
+            catch
             {
                 // ignored
             }

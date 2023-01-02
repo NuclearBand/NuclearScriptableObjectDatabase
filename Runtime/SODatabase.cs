@@ -13,6 +13,7 @@ namespace NuclearBand
     public static class SODatabase
     {
         public static string SavePath => Application.persistentDataPath + @"/save.txt";
+        // ReSharper disable once MemberCanBePrivate.Global
         public static string SaveBakPath => Application.persistentDataPath + @"/save.bak";
 
         private static FolderHolder _root = null!;
@@ -61,7 +62,7 @@ namespace NuclearBand
             var loadTasks = new Dictionary<string, Task<DataNode>>();
             foreach (var resourceLocation in resourceLocations)
             {
-                var key = resourceLocation.PrimaryKey.Substring(SODatabaseSettings.Path.Length);
+                var key = resourceLocation.PrimaryKey[SODatabaseSettings.Path.Length..];
                 if (!resourceLocation.ResourceType.IsSubclassOf(typeof(DataNode)) || loadTasks.ContainsKey(key))
                     continue;
                 loadTasks.Add(key, Addressables.LoadAssetAsync<DataNode>(resourceLocation).Task);
@@ -102,8 +103,8 @@ namespace NuclearBand
             for (var i = 0; i < pathElements.Length - 1; i++)
                 curFolder = curFolder.FolderHolders[pathElements[i]];
 
-            var dataNodeName = pathElements[pathElements.Length - 1];
-            return ((T) curFolder.DataNodes[dataNodeName])!;
+            var dataNodeName = pathElements[^1];
+            return (T) curFolder.DataNodes[dataNodeName];
         }
 
         public static List<T> GetModels<T>(string path, bool includeSubFolders = false) where T : DataNode
@@ -111,10 +112,10 @@ namespace NuclearBand
             var pathElements = path.Split('/');
             var curFolder = _root;
             if (path != string.Empty)
-                for (var i = 0; i < pathElements.Length; i++)
+                foreach (var pathElement in pathElements)
                 {
-                    if (curFolder.FolderHolders.ContainsKey(pathElements[i]))
-                        curFolder = curFolder.FolderHolders[pathElements[i]];
+                    if (curFolder.FolderHolders.ContainsKey(pathElement))
+                        curFolder = curFolder.FolderHolders[pathElement];
                     else
                         break;
                 }
@@ -162,8 +163,8 @@ namespace NuclearBand
             };
             foreach (var runtimeModelPair in RuntimeModels) 
                 save.RuntimeNodes.Add(runtimeModelPair.Key, JsonConvert.SerializeObject(runtimeModelPair.Value, JsonRuntimeSerializerSettings));
-            
-            using var fileStream = new StreamWriter(SavePath);
+
+            await using var fileStream = new StreamWriter(SavePath);
             await fileStream.WriteAsync(JsonConvert.SerializeObject(save));
             _saving = false;
         }
@@ -173,6 +174,7 @@ namespace NuclearBand
             await LoadAsync();
         }
 
+        // ReSharper disable once MemberCanBePrivate.Global
         public static async Task LoadAsync()
         {
             if (!File.Exists(SavePath)) {

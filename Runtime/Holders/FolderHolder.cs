@@ -3,19 +3,16 @@
 using UnityEditor;
 #endif
 using System.Collections.Generic;
-using UnityEngine;
 
 namespace NuclearBand
 {
     public class FolderHolder : Holder
     {
-        [HideInInspector]
         public Dictionary<string, DataNode> DataNodes = new();
-        
-        [HideInInspector]
+
         public Dictionary<string, FolderHolder> FolderHolders = new();
 
-        public FolderHolder() : base()
+        public FolderHolder()
         {
         }
 
