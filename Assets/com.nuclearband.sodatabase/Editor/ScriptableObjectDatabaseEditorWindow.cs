@@ -99,7 +99,7 @@ namespace NuclearBand.Editor
             switch (obj)
             {
                 case SelectionChangedType.ItemAdded:
-                    ((Holder) MenuTree.Selection.SelectedValue)!.Select();
+                    ((Holder) MenuTree.Selection.SelectedValue).Select();
                     break;
                 case SelectionChangedType.ItemRemoved:
                     break;
@@ -110,7 +110,7 @@ namespace NuclearBand.Editor
             }
         }
 
-        void AddAllAssetsAtPath(
+        private void AddAllAssetsAtPath(
             OdinMenuTree tree,
             string assetFolderPath,
             Type type)
@@ -122,8 +122,8 @@ namespace NuclearBand.Editor
             {
                 var asset = AssetDatabase.LoadAssetAtPath(str1, type);
                 var path = string.Empty;
-                var name = string.Empty;
-                var str2 = string.Empty;
+                string assetName;
+                string str2;
                 if (asset == null)
                 {
                     //it's a directory
@@ -132,17 +132,17 @@ namespace NuclearBand.Editor
                     if (length == -1)
                     {
                         path = string.Empty;
-                        name = str2;
+                        assetName = str2;
                     }
                     else
                     {
-                        path = str2.Substring(0, length);
-                        name = str2.Substring(length + 1);
+                        path = str2[..length];
+                        assetName = str2[(length + 1)..];
                     }
 
-                    if (name == string.Empty)
+                    if (assetName == string.Empty)
                         continue;
-                    tree.AddMenuItemAtPath(odinMenuItemSet, path, new OdinMenuItem(tree, name, new FolderHolder(path, name)));
+                    tree.AddMenuItemAtPath(odinMenuItemSet, path, new OdinMenuItem(tree, assetName, new FolderHolder(path, assetName)));
 
                     continue;
                 }
@@ -154,8 +154,8 @@ namespace NuclearBand.Editor
                     path = path.Trim('/') + "/" + str2;
 
                 path = path.Trim('/') + "/" + withoutExtension;
-                SplitMenuPath(path, out path, out name);
-                var menuItem = new OdinMenuItem(tree, name, new DataNodeHolder(path, name, (DataNode) asset));
+                SplitMenuPath(path, out path, out assetName);
+                var menuItem = new OdinMenuItem(tree, assetName, new DataNodeHolder(path, assetName, (DataNode) asset));
                 tree.AddMenuItemAtPath(odinMenuItemSet, path, menuItem);
                 AddDragHandles(menuItem);
             }
@@ -267,7 +267,7 @@ namespace NuclearBand.Editor
 
         private void AddDragHandles(OdinMenuItem menuItem)
         {
-            menuItem.OnDrawItem += x => DragAndDropUtilities.DragZone(menuItem.Rect, (menuItem.Value as DataNodeHolder)!.DataNode, false, false);
+            menuItem.OnDrawItem += _ => DragAndDropUtilities.DragZone(menuItem.Rect, (menuItem.Value as DataNodeHolder)!.DataNode, false, false);
         }
     }
 }

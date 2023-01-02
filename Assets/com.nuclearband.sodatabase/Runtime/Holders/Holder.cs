@@ -1,7 +1,6 @@
 #nullable enable
 using Newtonsoft.Json;
 using Sirenix.OdinInspector;
-using UnityEngine;
 
 namespace NuclearBand
 {
@@ -13,9 +12,7 @@ namespace NuclearBand
         }
 
 #if UNITY_EDITOR
-        [HideInInspector]
         public string Path = string.Empty;
-        [HideInInspector]
         public string Name = string.Empty;
 
         [ShowInInspector]
@@ -25,7 +22,7 @@ namespace NuclearBand
         [HorizontalGroup("Name")]
         protected string TempName = string.Empty;
 
-        public Holder(string path, string name)
+        protected Holder(string path, string name)
         {
             Path = path;
             Name = name;
@@ -38,12 +35,12 @@ namespace NuclearBand
         }
 
         [HorizontalGroup("Path")]
-        [ShowIf("@Path != _tempPath")]
+        [ShowIf("@Path != TempPath")]
         [Button]
         protected abstract void Move();
     
         [HorizontalGroup("Name")]
-        [ShowIf("@Name != _tempName")]
+        [ShowIf("@Name != TempName")]
         [Button]
         protected abstract void Rename();
         
