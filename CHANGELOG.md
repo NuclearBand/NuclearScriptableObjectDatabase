@@ -1,3 +1,10 @@
+## [1.18.2](https://github.com/NuclearBand/UnityScriptableObjectDatabase/compare/v1.18.1...v1.18.2) (2023-01-02)
+
+
+### Bug Fixes
+
+* TempName and TempPath visualization ([c369ce1](https://github.com/NuclearBand/UnityScriptableObjectDatabase/commit/c369ce12469a8c800b3f94274e2abd15cfe175c6))
+
 ## [1.18.1](https://github.com/NuclearBand/UnityScriptableObjectDatabase/compare/v1.18.0...v1.18.1) (2023-01-02)
 
 
