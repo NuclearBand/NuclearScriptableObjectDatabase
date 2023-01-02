@@ -1,6 +1,9 @@
 #nullable enable
 using Newtonsoft.Json;
 using Sirenix.OdinInspector;
+#if UNITY_EDITOR
+using UnityEngine;
+#endif
 
 namespace NuclearBand
 {
@@ -12,7 +15,9 @@ namespace NuclearBand
         }
 
 #if UNITY_EDITOR
+        [HideInInspector]
         public string Path = string.Empty;
+        [HideInInspector]
         public string Name = string.Empty;
 
         [ShowInInspector]
