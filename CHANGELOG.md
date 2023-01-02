@@ -1,3 +1,10 @@
+## [1.18.1](https://github.com/NuclearBand/UnityScriptableObjectDatabase/compare/v1.18.0...v1.18.1) (2023-01-02)
+
+
+### Bug Fixes
+
+* window visualization ([930e206](https://github.com/NuclearBand/UnityScriptableObjectDatabase/commit/930e2065d774d9cd6a2bba8ad13d517dd6cf24d8))
+
 # [1.18.0](https://github.com/NuclearBand/UnityScriptableObjectDatabase/compare/v1.17.0...v1.18.0) (2022-11-13)
 
 
