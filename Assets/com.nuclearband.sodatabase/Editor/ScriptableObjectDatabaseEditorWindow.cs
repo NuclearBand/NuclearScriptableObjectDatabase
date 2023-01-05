@@ -45,6 +45,15 @@ namespace NuclearBand.Editor
                         field.SetValue(model, default);
                 }
 
+                var properties =
+                    typeInfo.GetProperties(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
+                foreach (var property in properties)
+                {
+                    var attributes = property.GetCustomAttributes(typeof(JsonPropertyAttribute), false);
+                    if (attributes.Length > 0)
+                        property.SetValue(model, default);
+                }
+
                 EditorUtility.SetDirty(model);
             }
 
