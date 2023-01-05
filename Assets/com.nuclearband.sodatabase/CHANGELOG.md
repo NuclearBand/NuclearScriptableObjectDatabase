@@ -1,3 +1,10 @@
+## [1.18.3](https://github.com/NuclearBand/UnityScriptableObjectDatabase/compare/v1.18.2...v1.18.3) (2023-01-05)
+
+
+### Bug Fixes
+
+* now 'clear save' works for properties with [JsonProperty] ([76fb069](https://github.com/NuclearBand/UnityScriptableObjectDatabase/commit/76fb0693f72747b1c19cf35e015b41ddb02cd51e))
+
 ## [1.18.2](https://github.com/NuclearBand/UnityScriptableObjectDatabase/compare/v1.18.1...v1.18.2) (2023-01-02)
 
 
