@@ -4,22 +4,17 @@ using UnityEditor;
 #endif
 using System.Collections.Generic;
 
-namespace NuclearBand
+namespace Nuclear.SODatabase
 {
-    public class FolderHolder : Holder
+    internal class FolderHolder : Holder
     {
-        public Dictionary<string, DataNode> DataNodes = new();
+        internal Dictionary<string, DataNode> DataNodes = new();
+        internal Dictionary<string, FolderHolder> FolderHolders = new();
 
-        public Dictionary<string, FolderHolder> FolderHolders = new();
-
-        public FolderHolder()
-        {
-        }
+        internal FolderHolder() { }
 
 #if UNITY_EDITOR
-        public FolderHolder(string path, string name) : base(path, name)
-        {
-        }
+        internal FolderHolder(string path, string name) : base(path, name) { }
 
         protected override void Move()
         {
@@ -49,7 +44,7 @@ namespace NuclearBand
             if (!EditorUtility.DisplayDialog("Remove folder",
                     "Are you sure you want to remove folder with DataNodes?", "Yes, remove", "No"))
                 return;
-            SODatabaseInternal.RemoveFolder(Path + "/" + Name);
+            SODatabaseUtilities.RemoveFolder(Path + "/" + Name);
         }
 #endif
     }

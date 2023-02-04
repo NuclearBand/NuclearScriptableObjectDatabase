@@ -3,17 +3,13 @@
 using Sirenix.OdinInspector;
 using UnityEditor;
 
-namespace NuclearBand
+namespace Nuclear.SODatabase
 {
-    public class DataNodeHolder : Holder
+    internal class DataNodeHolder : Holder
     {
-        [InlineEditor(InlineEditorObjectFieldModes.CompletelyHidden)]
-        public DataNode DataNode;
+        [InlineEditor(InlineEditorObjectFieldModes.CompletelyHidden)] internal DataNode DataNode;
 
-        public DataNodeHolder(string path, string name, DataNode dataNode) : base(path, name)
-        {
-            DataNode = dataNode;
-        }
+        internal DataNodeHolder(string path, string name, DataNode dataNode) : base(path, name) => DataNode = dataNode;
 
         protected override void Move()
         {

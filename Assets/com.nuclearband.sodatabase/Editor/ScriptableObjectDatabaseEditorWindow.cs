@@ -12,7 +12,7 @@ using Sirenix.Utilities.Editor;
 using UnityEditor;
 using UnityEngine;
 
-namespace NuclearBand.Editor
+namespace Nuclear.SODatabase.Editor
 {
     public class ScriptableObjectDatabaseEditorWindow : OdinMenuEditorWindow
     {
@@ -32,8 +32,8 @@ namespace NuclearBand.Editor
         {
             AssetDatabase.Refresh();
             
-            File.Delete(SODatabase.SavePath);
-            var models = SODatabaseInternal.GetModelsForEdit<DataNode>("");
+            File.Delete(SODatabaseSaver.SavePath);
+            var models = SODatabaseUtilities.GetModelsForEdit<DataNode>("");
             foreach (var model in models)
             {
                 var typeInfo = model.GetType().GetTypeInfo();

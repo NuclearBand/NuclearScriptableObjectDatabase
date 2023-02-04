@@ -2,17 +2,20 @@
 using System;
 using Newtonsoft.Json.Serialization;
 
-namespace NuclearBand
+namespace Nuclear.SODatabase
 {
     public class DataNodeReferenceResolver : IReferenceResolver
     {
+        private readonly ISODatabase _soDatabase;
         public static DataNode CurrentDataNode = null!;
+
+        public DataNodeReferenceResolver(ISODatabase soDatabase) => _soDatabase = soDatabase;
 
         public object ResolveReference(object context, string reference)
         {
             try
             {
-                return SODatabase.GetModel<DataNode>(reference);
+                return _soDatabase.GetModel<DataNode>(reference);
             }
             catch (Exception)
             {
@@ -27,9 +30,6 @@ namespace NuclearBand
         }
 
         public bool IsReferenced(object context, object value) => !ReferenceEquals(value, CurrentDataNode);
-
-        public void AddReference(object context, string reference, object value)
-        {
-        }
+        public void AddReference(object context, string reference, object value) { }
     }
 }

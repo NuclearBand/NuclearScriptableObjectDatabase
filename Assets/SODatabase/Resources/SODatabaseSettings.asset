@@ -41,5 +41,5 @@ MonoBehaviour:
     - Name: 
       Entry: 8
       Data: 
-  path: Assets/SODatabaseModels/
-  label: SODatabase
+  _path: Assets/SODatabaseModels/
+  _label: SODatabase

@@ -15,12 +15,16 @@ MonoBehaviour:
   serializationData:
     SerializedFormat: 2
     SerializedBytes: 
-    ReferencedUnityObjects: []
+    ReferencedUnityObjects:
+    - {fileID: 11400000, guid: 7dd3cfdc035f56b44954578039989c7a, type: 2}
     SerializedBytesString: 
     Prefab: {fileID: 0}
     PrefabModificationsReferencedUnityObjects: []
     PrefabModifications: []
-    SerializationNodes: []
-  fullPath: Example1Folder
+    SerializationNodes:
+    - Name: _interface
+      Entry: 10
+      Data: 0
+  _fullPath: Example1Folder
   Description: 1
   DataNode: {fileID: 11400000, guid: 7dd3cfdc035f56b44954578039989c7a, type: 2}

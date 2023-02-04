@@ -7,12 +7,11 @@ using UnityEngine;
 using UnityEditor;
 #endif
 
-namespace NuclearBand
+namespace Nuclear.SODatabase
 {
     public class SODatabaseSettings : SerializedScriptableObject
     {
         private static SODatabaseSettings? _instance;
-
         public static SODatabaseSettings Instance
         {
             get
@@ -24,10 +23,11 @@ namespace NuclearBand
                 {
                     AssetDatabase.Refresh();
                     _instance = CreateInstance<SODatabaseSettings>();
-                    AssetDatabase.CreateFolder("Assets", "SODatabase");
-                    AssetDatabase.CreateFolder("Assets/SODatabase", "Resources");
-                    const string destination = "Assets/SODatabase/Resources/";
-                    AssetDatabase.CreateAsset(_instance, (destination + "SODatabaseSettings.asset"));
+                    if (!AssetDatabase.IsValidFolder("Assets/SODatabase"))
+                        AssetDatabase.CreateFolder("Assets", "SODatabase");
+                    if (!AssetDatabase.IsValidFolder("Assets/SODatabase/Resources"))
+                        AssetDatabase.CreateFolder("Assets/SODatabase", "Resources");
+                    AssetDatabase.CreateAsset(_instance, ("Assets/SODatabase/Resources/SODatabaseSettings.asset"));
                     AssetDatabase.SaveAssets();
                 }
 #endif
@@ -35,32 +35,20 @@ namespace NuclearBand
             }
         }
 
-        public static string Path => Instance.path;
-        public static string Label => Instance.label;
+        public static string Path => Instance._path;
+        public static string Label => Instance._label;
 
-        [SerializeField]
-        [ReadOnly]
-        [Title("Don't forget to set this folder as Addressable with label")]
-        private string path = string.Empty;
-
-
-        [SerializeField]
-        [ReadOnly]
-        private string label = "SODatabase";
-
-
-        [FolderPath(AbsolutePath = false)]
-        [NonSerialized, ShowInInspector]
-        public string SavePath = string.Empty;
+        [SerializeField] [ReadOnly] [Title("Don't forget to set this folder as Addressable with label")]
+        private string _path = string.Empty;
+        
+        [SerializeField] [ReadOnly] private string _label = "SODatabase";
+        
+        [FolderPath(AbsolutePath = false)] [NonSerialized, ShowInInspector] public string SavePath = string.Empty;
 
         // ReSharper disable once CollectionNeverUpdated.Global
         // ReSharper disable once FieldCanBeMadeReadOnly.Global
         public Dictionary<Type, Texture> NodeIcons = new();
 
-        [Button]
-        private void Save()
-        {
-            path = SavePath + "/";
-        }
+        [Button] private void Save() => _path = SavePath + "/";
     }
 }

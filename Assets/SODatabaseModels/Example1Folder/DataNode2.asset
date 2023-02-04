@@ -21,5 +21,6 @@ MonoBehaviour:
     PrefabModificationsReferencedUnityObjects: []
     PrefabModifications: []
     SerializationNodes: []
-  fullPath: Example1Folder
+  _fullPath: Example1Folder
   Description2: 2
+  _x: 0
