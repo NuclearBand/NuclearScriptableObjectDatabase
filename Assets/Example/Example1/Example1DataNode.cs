@@ -24,9 +24,9 @@ namespace Nuclear.SODatabase
         [JsonProperty, ShowInInspector]
         private IExample1DataNode2 _interface2;
 
-        public override void AfterLoad()
+        public override void AfterLoad(ISODatabase soDatabase)
         {
-            base.AfterLoad();
+            base.AfterLoad(soDatabase);
             _interface2 = _interface;
         }
     }
