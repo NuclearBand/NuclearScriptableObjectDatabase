@@ -5,7 +5,7 @@ using System.Reflection;
 using UnityEditor;
 #endif
 
-namespace NuclearBand
+namespace Nuclear.SODatabase
 {
     [AttributeUsage(AttributeTargets.Field)]
     public class ResetOnPlay : Attribute
@@ -26,7 +26,7 @@ namespace NuclearBand
         {
             if (playModeStateChange != PlayModeStateChange.EnteredEditMode) 
                 return;
-            var models = SODatabaseInternal.GetModelsForEdit<DataNode>("");
+            var models = SODatabaseUtilities.GetModelsForEdit<DataNode>("");
             foreach (var model in models)
             {
                 var typeInfo = model.GetType().GetTypeInfo();

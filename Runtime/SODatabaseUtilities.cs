@@ -6,18 +6,18 @@ using System.Linq;
 using UnityEditor;
 using UnityEngine;
 
-namespace NuclearBand
+namespace Nuclear.SODatabase
 {
-    public static class SODatabaseInternal
+    internal static class SODatabaseUtilities
     {
         // ReSharper disable once MemberCanBePrivate.Global
-        public static T GetModelForEdit<T>(string path) where T : DataNode
+        internal static T GetModelForEdit<T>(string path) where T : DataNode
         {
             return AssetDatabase.LoadAssetAtPath<T>(SODatabaseSettings.Path + path + ".asset") ??
                 throw new ArgumentException($"Could not get model at path {path}");
         }
 
-        public static List<T> GetModelsForEdit<T>(string path) where T : DataNode
+        internal static List<T> GetModelsForEdit<T>(string path) where T : DataNode
         {
             var searchPath = (SODatabaseSettings.Path + path).TrimEnd('/');
             var modelGUIDs = AssetDatabase.FindAssets($"t:{typeof(T).Name}",new [] {searchPath});
@@ -26,7 +26,7 @@ namespace NuclearBand
         }
 
         // ReSharper disable once MemberCanBePrivate.Global
-        public static void CreateFolder(string path)
+        internal static void CreateFolder(string path)
         {
             AssetDatabase.Refresh();
             var folders = path.Split('/');
@@ -45,7 +45,7 @@ namespace NuclearBand
             AssetDatabase.SaveAssets();
         }
 
-        public static T CreateModel<T>(string path, string name) where T : DataNode
+        internal static T CreateModel<T>(string path, string name) where T : DataNode
         {
             try
             {
@@ -67,7 +67,7 @@ namespace NuclearBand
             return obj;
         }
 
-        public static void RemoveFolder(string path)
+        internal static void RemoveFolder(string path)
         {
             AssetDatabase.DeleteAsset(SODatabaseSettings.Path + "/" + path);
             AssetDatabase.Refresh();

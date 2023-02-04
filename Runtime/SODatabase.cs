@@ -1,78 +1,36 @@
 #nullable enable
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using Newtonsoft.Json;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
+using UnityEngine.ResourceManagement.AsyncOperations;
+using UnityEngine.ResourceManagement.ResourceLocations;
 
-namespace NuclearBand
+namespace Nuclear.SODatabase
 {
-    public static class SODatabase
+    public class SODatabase : ISODatabase
     {
-        public static string SavePath => Application.persistentDataPath + @"/save.txt";
+        private readonly Dictionary<string, object> _runtimeModels = new();
+        private ISODatabaseSaver _soDatabaseSaver = null!;
+        private FolderHolder _root = null!;
+
+        private ISODatabase This => this;
+
+        async void ISODatabase.Init(Action<float>? onProgress, Action? onComplete) => 
+            await This.InitAsync(onProgress, onComplete);
+
         // ReSharper disable once MemberCanBePrivate.Global
-        public static string SaveBakPath => Application.persistentDataPath + @"/save.bak";
-
-        private static FolderHolder _root = null!;
-
-        private static readonly Dictionary<string, object> RuntimeModels = new();
-
-        private static bool _saving;
-        
-        private static JsonSerializerSettings JsonSerializerSettings => new()
+        async Awaitable ISODatabase.InitAsync(Action<float>? onProgress, Action? onComplete)
         {
-            Formatting = Formatting.Indented,
-            TypeNameHandling = TypeNameHandling.All,
-            ReferenceResolverProvider = () => new DataNodeReferenceResolver(),
-            ObjectCreationHandling = ObjectCreationHandling.Replace,
-        };
-        
-        private static JsonSerializerSettings JsonRuntimeSerializerSettings => new()
-        {
-            Formatting = Formatting.Indented,
-            TypeNameHandling = TypeNameHandling.All,
-            ReferenceResolverProvider = () => new DataNodeReferenceResolver()
-        };
-
-        public static async void Init(Action<float>? onProgress, Action? onComplete)
-        {
-            await InitAsync(onProgress, onComplete);
-        }
-
-        public static async Task InitAsync(Action<float>? onProgress, Action? onComplete)
-        {
-            var loadHandler = Addressables.LoadResourceLocationsAsync(SODatabaseSettings.Label);
-#pragma warning disable 4014
-            Task.Run(async () =>
+            var resourceLocations = await LoadResourceLocations(onProgress);
+            _root = new();
+            var resources = await LoadResources(resourceLocations);
+            foreach (var resource in resources)
             {
-                while (!loadHandler.IsDone)
-                {
-                    CallAction(() => { onProgress?.Invoke(loadHandler.PercentComplete); });
-                    await Task.Delay(50);
-                }
-
-                CallAction(() => { onProgress?.Invoke(loadHandler.PercentComplete); });
-            });
-#pragma warning restore 4014
-            var resourceLocations = await loadHandler.Task;
-
-            var loadTasks = new Dictionary<string, Task<DataNode>>();
-            foreach (var resourceLocation in resourceLocations)
-            {
-                var key = resourceLocation.PrimaryKey[SODatabaseSettings.Path.Length..];
-                if (!resourceLocation.ResourceType.IsSubclassOf(typeof(DataNode)) || loadTasks.ContainsKey(key))
-                    continue;
-                loadTasks.Add(key, Addressables.LoadAssetAsync<DataNode>(resourceLocation).Task);
-            }
-            await Task.WhenAll(loadTasks.Values);
-            _root = new FolderHolder();
-            foreach (var loadTask in loadTasks)
-            {
-                //SODatabase/Example1Folder/Example1.asset
-                var pathElements = loadTask.Key.Split('/');
+                // SODatabase/Example1Folder/Example1.asset
+                var pathElements = resource.Key.Split('/');
                 var curFolder = _root;
                 for (var i = 0; i < pathElements.Length - 1; i++)
                 {
@@ -83,20 +41,53 @@ namespace NuclearBand
                 }
 
                 var dataNodeName = pathElements[^1];
-                dataNodeName = dataNodeName.Substring(0, dataNodeName.IndexOf(".asset", StringComparison.Ordinal));
-                curFolder.DataNodes.Add(dataNodeName, loadTask.Value.Result);
+                dataNodeName = dataNodeName[..dataNodeName.IndexOf(".asset", StringComparison.Ordinal)];
+                curFolder.DataNodes.Add(dataNodeName, resource.Value);
             }
 
-            CallAction(onComplete);
+            _soDatabaseSaver = new SODatabaseSaver(this, _root, _runtimeModels);
+            onComplete?.Invoke();
         }
 
-        private static async void CallAction(Action? action)
+        private static async Task<IList<IResourceLocation>> LoadResourceLocations(Action<float>? onProgress)
         {
-            action?.Invoke();
-            await Task.CompletedTask;
+            var loadHandler = Addressables.LoadResourceLocationsAsync(SODatabaseSettings.Label);
+            HandleProgress(onProgress, loadHandler);
+            return await loadHandler.Task;
         }
 
-        public static T GetModel<T>(string path) where T : DataNode
+        private static async Task<Dictionary<string, DataNode>> LoadResources(IEnumerable<IResourceLocation> resourceLocations)
+        {
+            var loadTasks = new Dictionary<string, Task<DataNode>>();
+            foreach (var resourceLocation in resourceLocations)
+            {
+                var key = resourceLocation.PrimaryKey[SODatabaseSettings.Path.Length..];
+                if (!resourceLocation.ResourceType.IsSubclassOf(typeof(DataNode)) || loadTasks.ContainsKey(key))
+                    continue;
+                loadTasks.Add(key, Addressables.LoadAssetAsync<DataNode>(resourceLocation).Task);
+            }
+
+            // TODO: Handle progress
+            await Task.WhenAll(loadTasks.Values);
+            return loadTasks.ToDictionary(loadTask => loadTask.Key, 
+                loadTask => loadTask.Value.Result);
+        }
+
+        private static void HandleProgress(Action<float>? onProgress, AsyncOperationHandle<IList<IResourceLocation>> loadHandler)
+        {
+            Task.Run(async () =>
+            {
+                while (!loadHandler.IsDone)
+                {
+                    onProgress?.Invoke(loadHandler.PercentComplete);
+                    await Task.Delay(50);
+                }
+
+                onProgress?.Invoke(loadHandler.PercentComplete);
+            });
+        }
+
+        T ISODatabase.GetModel<T>(string path)
         {
             var pathElements = path.Split('/');
             var curFolder = _root;
@@ -107,7 +98,7 @@ namespace NuclearBand
             return (T) curFolder.DataNodes[dataNodeName];
         }
 
-        public static List<T> GetModels<T>(string path, bool includeSubFolders = false) where T : DataNode
+        IReadOnlyList<T> ISODatabase.GetModels<T>(string path, bool includeSubFolders)
         {
             var pathElements = path.Split('/');
             var curFolder = _root;
@@ -124,131 +115,34 @@ namespace NuclearBand
             if (!includeSubFolders)
                 return res;
 
-
             foreach (var folderName in curFolder.FolderHolders.Keys)
             {
                 var newPath = path == string.Empty ? folderName : $"{path}/{folderName}";
-                res.AddRange(GetModels<T>(newPath, includeSubFolders));
+                res.AddRange(This.GetModels<T>(newPath, includeSubFolders));
             }
 
             return res;
         }
 
-        public static async void Save()
-        {
-            await SaveAsync();
-        }
-
-        public static async Task SaveAsync()
-        {
-            if (_saving)
-                return;
-            
-            _saving = true;
-            if (File.Exists(SavePath))
-                File.Copy(SavePath, SaveBakPath, true);
-            
-            var staticNodes = new Dictionary<string, string>();
-            foreach (var dataNode in DataNodes(_root))
-            {
-                DataNodeReferenceResolver.CurrentDataNode = dataNode;
-                dataNode.BeforeSave();
-                var json = JsonConvert.SerializeObject(dataNode, JsonSerializerSettings);
-                staticNodes.Add(dataNode.FullPath, json);
-            }
-            
-            var save = new SODatabaseSaveFormat
-            {
-                StaticNodes = staticNodes
-            };
-            foreach (var runtimeModelPair in RuntimeModels) 
-                save.RuntimeNodes.Add(runtimeModelPair.Key, JsonConvert.SerializeObject(runtimeModelPair.Value, JsonRuntimeSerializerSettings));
-
-            await using var fileStream = new StreamWriter(SavePath);
-            await fileStream.WriteAsync(JsonConvert.SerializeObject(save));
-            _saving = false;
-        }
-
-        public static async void Load()
-        {
-            await LoadAsync();
-        }
+        async void ISODatabase.Save() => await This.SaveAsync();
 
         // ReSharper disable once MemberCanBePrivate.Global
-        public static async Task LoadAsync()
-        {
-            if (!File.Exists(SavePath)) {
-                foreach (var dataNode in DataNodes(_root))
-                    dataNode.AfterLoad();
-                return;
-            }
+        async Awaitable ISODatabase.SaveAsync() => await _soDatabaseSaver.SaveAsync();
 
-            do
-            {
-                try
-                {
-                    using var fileStream = new StreamReader(SavePath);
-                    var serializedDictionary = await fileStream.ReadToEndAsync();
-                    var save = JsonConvert.DeserializeObject<SODatabaseSaveFormat>(serializedDictionary);
-                    if (save == null)
-                        throw new Exception();
+        async void ISODatabase.Load() => await This.LoadAsync();
 
-                    foreach (var dataNode in DataNodes(_root))
-                    {
-                        DataNodeReferenceResolver.CurrentDataNode = dataNode;
-                        var json = save.StaticNodes.ContainsKey(dataNode.FullPath)
-                            ? save.StaticNodes[dataNode.FullPath]
-                            : string.Empty;
-                        if (string.IsNullOrEmpty(json))
-                            continue;
-                        DataNodeReferenceResolver.CurrentDataNode = dataNode;
-                        JsonConvert.PopulateObject(json, dataNode, JsonSerializerSettings);
-                    }
+        // ReSharper disable once MemberCanBePrivate.Global
+        async Awaitable ISODatabase.LoadAsync() => await _soDatabaseSaver.LoadAsync();
 
-                    RuntimeModels.Clear();
-                    foreach (var runtimeNodePair in save.RuntimeNodes)
-                    {
-                        var x = JsonConvert.DeserializeObject(runtimeNodePair.Value, JsonRuntimeSerializerSettings)!;
-                        RuntimeModels.Add(runtimeNodePair.Key, x);
-                    }
-
-                    break;
-                }
-                catch (Exception)
-                {
-                    if (File.Exists(SaveBakPath))
-                    {
-                        File.Copy(SaveBakPath, SavePath, true);
-                        File.Delete(SaveBakPath);
-                        continue;
-                    }
-
-                    break;
-                }
-            } while (true);
-
-            foreach (var dataNode in DataNodes(_root))
-                dataNode.AfterLoad();
-        }
-        private static IEnumerable<DataNode> DataNodes(FolderHolder folderHolder)
-        {
-            foreach (var dataNodePair in folderHolder.DataNodes)
-                yield return dataNodePair.Value;
-
-            foreach (var folderHolderPair in folderHolder.FolderHolders)
-                foreach (var dataNode in DataNodes(folderHolderPair.Value))
-                    yield return dataNode;
-        }
-        
-        public static T GetRuntimeModel<T>(string path, Func<T>? allocator = null) where T : class
+        T ISODatabase.GetRuntimeModel<T>(string path, Func<T>? allocator)
         {
             T model;
-            if (RuntimeModels.ContainsKey(path))
-                model = (T) RuntimeModels[path];
+            if (_runtimeModels.ContainsKey(path))
+                model = (T) _runtimeModels[path];
             else
             {
                 model = allocator!();
-                RuntimeModels.Add(path, model);
+                _runtimeModels.Add(path, model);
             }
             return model;
         }

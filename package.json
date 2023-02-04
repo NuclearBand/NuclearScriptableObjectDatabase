@@ -1,6 +1,6 @@
 {
   "name": "com.nuclearband.sodatabase",
-  "displayName": "Scriptable Objeсt database",
+  "displayName": "Nuclear Scriptable Objeсt Database",
   "version": "1.18.3",
   "dependencies": {
     "com.unity.addressables": "1.7.5",
@@ -17,7 +17,7 @@
     "scriptable object",
     "nuclearband"
   ],
-  "repository": "https://github.com/NuclearBand/UnityScriptableObjectDatabase.git#upm",
+  "repository": "https://github.com/NuclearBand/NuclearScriptableObjectDatabase.git#upm",
   "license": "MIT",
   "type": "library"
 }

@@ -8,7 +8,7 @@ using Sirenix.Utilities;
 using UnityEditor;
 using UnityEngine;
 
-namespace NuclearBand.Editor
+namespace Nuclear.SODatabase.Editor
 {
     public static class DataNodeCreator
     {

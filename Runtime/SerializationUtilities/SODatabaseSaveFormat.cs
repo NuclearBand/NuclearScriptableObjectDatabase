@@ -1,8 +1,7 @@
+#nullable enable
 using System.Collections.Generic;
 
-#nullable enable
-
-namespace NuclearBand
+namespace Nuclear.SODatabase
 {
     public class SODatabaseSaveFormat
     {
