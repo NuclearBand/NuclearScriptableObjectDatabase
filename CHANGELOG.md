@@ -1,3 +1,10 @@
+## [1.19.2](https://github.com/NuclearBand/NuclearScriptableObjectDatabase/compare/v1.19.1...v1.19.2) (2023-02-04)
+
+
+### Bug Fixes
+
+* change signature of DataNode.AfterLoad ([470c539](https://github.com/NuclearBand/NuclearScriptableObjectDatabase/commit/470c5394c7bf12d83485c9e181725c3d0b39d400))
+
 ## [1.19.1](https://github.com/NuclearBand/NuclearScriptableObjectDatabase/compare/v1.19.0...v1.19.1) (2023-02-04)
 
 
