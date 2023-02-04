@@ -13,6 +13,7 @@ namespace Nuclear.SODatabase
         // ReSharper disable once MemberCanBePrivate.Global
         internal static string SaveBakPath => Application.persistentDataPath + @"/save.bak";
 
+        private readonly ISODatabase _database;
         private readonly FolderHolder _root;
         private readonly Dictionary<string, object> _runtimeModels;
 
@@ -23,6 +24,7 @@ namespace Nuclear.SODatabase
 
         public SODatabaseSaver(ISODatabase database, FolderHolder root, Dictionary<string, object> runtimeModels)
         {
+            _database = database;
             _root = root;
             _runtimeModels = runtimeModels;
             
@@ -78,7 +80,7 @@ namespace Nuclear.SODatabase
         {
             if (!File.Exists(SavePath)) {
                 foreach (var dataNode in DataNodes(_root))
-                    dataNode.AfterLoad();
+                    dataNode.AfterLoad(_database);
                 return;
             }
 
@@ -127,7 +129,7 @@ namespace Nuclear.SODatabase
             } while (true);
 
             foreach (var dataNode in DataNodes(_root))
-                dataNode.AfterLoad();
+                dataNode.AfterLoad(_database);
         }
         
         private IEnumerable<DataNode> DataNodes(FolderHolder folderHolder)

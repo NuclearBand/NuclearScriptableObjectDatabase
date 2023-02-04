@@ -14,7 +14,7 @@ namespace Nuclear.SODatabase
 
         public virtual void BeforeSave() { }
 
-        public virtual void AfterLoad() { }
+        public virtual void AfterLoad(ISODatabase soDatabase) { }
 
 #if UNITY_EDITOR
         public void SetFullPath(string fullPath) => _fullPath = fullPath;
