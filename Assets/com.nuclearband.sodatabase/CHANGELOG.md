@@ -1,3 +1,15 @@
+# [1.19.0](https://github.com/NuclearBand/NuclearScriptableObjectDatabase/compare/v1.18.3...v1.19.0) (2023-02-04)
+
+
+### Bug Fixes
+
+* ci ([4cac5d5](https://github.com/NuclearBand/NuclearScriptableObjectDatabase/commit/4cac5d5425c85281dbc481e1d8034ede8c3c62df))
+
+
+### Features
+
+* interfaces ([3538fe0](https://github.com/NuclearBand/NuclearScriptableObjectDatabase/commit/3538fe0a6ce4421915155e22d42acecd47362f3f))
+
 ## [1.18.3](https://github.com/NuclearBand/UnityScriptableObjectDatabase/compare/v1.18.2...v1.18.3) (2023-01-05)
 
 
