@@ -1,13 +1,13 @@
-# UnityScriptableObjectDatabase
+# Nuclear Scriptable Object Database
 Database for scriptable objects in Unity using Odin Inspector
 
 ## Requires
-Unity 2020.1.4 or later (C# 8)
+Unity 2023.1 or later (C# 8, Awaitable)
 
 ## Installation
 You can install via git url by adding this entry in your **manifest.json**
 ```
-"com.nuclearband.sodatabase": "https://github.com/NuclearBand/UnityScriptableObjectDatabase.git#upm"
+"com.nuclearband.sodatabase": "https://github.com/NuclearBand/NuclearScriptableObjectDatabase.git#upm"
 ```
 The library depends on [Odin Inspector](https://odininspector.com/)
 
@@ -15,8 +15,8 @@ The library depends on [Odin Inspector](https://odininspector.com/)
 2. Add selected folder to Addressables groups with "SODatabase" label.
 
 ## Documentation
-- [Documentation](https://github.com/NuclearBand/UnityScriptableObjectDatabase/tree/master/Assets/com.nuclearband.sodatabase/Documentation/Documentation.en.md)
-- [Документация](https://github.com/NuclearBand/UnityScriptableObjectDatabase/tree/master/Assets/com.nuclearband.sodatabase/Documentation/Documentation.ru.md)
+- [Documentation](https://github.com/NuclearBand/NuclearScriptableObjectDatabase/tree/master/Assets/com.nuclearband.sodatabase/Documentation/Documentation.en.md)
+- [Документация](https://github.com/NuclearBand/NuclearScriptableObjectDatabase/tree/master/Assets/com.nuclearband.sodatabase/Documentation/Documentation.ru.md)
 
 ## Contributing
 
