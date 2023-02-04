@@ -1,3 +1,10 @@
+## [1.19.1](https://github.com/NuclearBand/NuclearScriptableObjectDatabase/compare/v1.19.0...v1.19.1) (2023-02-04)
+
+
+### Bug Fixes
+
+* SODatabaseInternal back to publick ([d15ff53](https://github.com/NuclearBand/NuclearScriptableObjectDatabase/commit/d15ff5399f42402ad6c3b94dfe057db6f9282829))
+
 # [1.19.0](https://github.com/NuclearBand/NuclearScriptableObjectDatabase/compare/v1.18.3...v1.19.0) (2023-02-04)
 
 
