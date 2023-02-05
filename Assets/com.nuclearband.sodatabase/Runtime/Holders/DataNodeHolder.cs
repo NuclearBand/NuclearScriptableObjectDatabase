@@ -7,7 +7,7 @@ namespace Nuclear.SODatabase
 {
     internal class DataNodeHolder : Holder
     {
-        [InlineEditor(InlineEditorObjectFieldModes.CompletelyHidden)] internal DataNode DataNode;
+        [InlineEditor(InlineEditorObjectFieldModes.CompletelyHidden)] [ShowInInspector] internal DataNode DataNode;
 
         internal DataNodeHolder(string path, string name, DataNode dataNode) : base(path, name) => DataNode = dataNode;
 

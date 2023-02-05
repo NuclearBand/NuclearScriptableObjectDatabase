@@ -225,7 +225,7 @@ namespace Nuclear.SODatabase.Editor
                     path += string.IsNullOrEmpty((MenuTree.Selection.SelectedValue as Holder)!.Path) ? string.Empty : (MenuTree.Selection.SelectedValue as Holder)!.Path + "/";
                 if (MenuTree.Selection.SelectedValue is FolderHolder folderHolder)
                     path += folderHolder.Name + "/";
-                path = path.Substring(0, path.Length - 1);
+                path = path[..^1];
                 if (SirenixEditorGUI.ToolbarButton(new GUIContent("Create DataNode")))
                     DataNodeCreator.ShowDialog<DataNode>(path, TrySelectMenuItemWithObject);
 
