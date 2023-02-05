@@ -1,3 +1,10 @@
+## [1.19.3](https://github.com/NuclearBand/NuclearScriptableObjectDatabase/compare/v1.19.2...v1.19.3) (2023-02-05)
+
+
+### Bug Fixes
+
+* DataNodeHolder visualization ([e2d9564](https://github.com/NuclearBand/NuclearScriptableObjectDatabase/commit/e2d9564f5ebbf78fe82c4809016814a8a78a413f))
+
 ## [1.19.2](https://github.com/NuclearBand/NuclearScriptableObjectDatabase/compare/v1.19.1...v1.19.2) (2023-02-04)
 
 
