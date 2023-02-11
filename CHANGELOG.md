@@ -1,3 +1,10 @@
+## [1.19.4](https://github.com/NuclearBand/NuclearScriptableObjectDatabase/compare/v1.19.3...v1.19.4) (2023-02-11)
+
+
+### Bug Fixes
+
+* add error message on failed load ([6c70874](https://github.com/NuclearBand/NuclearScriptableObjectDatabase/commit/6c708746c8bec100a1df84e7cb55ebfb877cfaf2))
+
 ## [1.19.3](https://github.com/NuclearBand/NuclearScriptableObjectDatabase/compare/v1.19.2...v1.19.3) (2023-02-05)
 
 
