@@ -1,7 +1,7 @@
 {
   "name": "com.nuclearband.sodatabase",
   "displayName": "Nuclear Scriptable Objeсt Database",
-  "version": "1.19.3",
+  "version": "1.19.4",
   "dependencies": {
     "com.unity.addressables": "1.7.5",
     "com.unity.nuget.newtonsoft-json": "2.0.0"
