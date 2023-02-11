@@ -115,8 +115,9 @@ namespace Nuclear.SODatabase
 
                     break;
                 }
-                catch (Exception)
+                catch (Exception e)
                 {
+                    Debug.LogError(e.Message);
                     if (File.Exists(SaveBakPath))
                     {
                         File.Copy(SaveBakPath, SavePath, true);
