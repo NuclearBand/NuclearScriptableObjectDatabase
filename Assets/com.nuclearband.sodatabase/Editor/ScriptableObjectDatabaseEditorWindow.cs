@@ -1,30 +1,38 @@
 #nullable enable
-#if UNITY_EDITOR
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
 using Newtonsoft.Json;
-using Sirenix.OdinInspector.Editor;
-using Sirenix.Utilities;
-using Sirenix.Utilities.Editor;
+using TriInspector;
+using TriInspector.Utilities;
 using UnityEditor;
+using UnityEditor.IMGUI.Controls;
 using UnityEngine;
 
 namespace Nuclear.SODatabase.Editor
 {
-    public class ScriptableObjectDatabaseEditorWindow : OdinMenuEditorWindow
+    public class ScriptableObjectDatabaseEditorWindow : EditorWindow
     {
         public static event Action? OnSave;
         
+        private MenuTree _menuTree;
+        private SearchField _searchField;
+        
+        private SerializedObject _currentSerializedObject;
+        private TriPropertyTree _currentPropertyTree;
+        private Vector2 _currentScroll;
+        
         private bool _inSettings;
-
+        
         [MenuItem("Tools/NuclearBand/ScriptableObjectDatabase")]
         private static void Open()
         {
             var window = GetWindow<ScriptableObjectDatabaseEditorWindow>();
-            window.position = GUIHelper.GetEditorWindowRect().AlignCenter(800, 500);
+            window.titleContent = new GUIContent("ScriptableObjectDatabase");
+            window.Show();
+            //window.position = GUIHelper.GetEditorWindowRect().AlignCenter(800, 500);
         }
 
         [MenuItem("Tools/NuclearBand/ScriptableObjectDatabase-ClearSave")]
@@ -66,129 +74,118 @@ namespace Nuclear.SODatabase.Editor
             EditorUtility.RevealInFinder(Application.persistentDataPath);
         }
 
-        protected override OdinMenuTree BuildMenuTree()
+        private void OnEnable()
         {
-            var tree = new OdinMenuTree(true)
-            {
-                DefaultMenuStyle = {IconSize = 28.00f},
-                Config = {DrawSearchToolbar = true}
-            };
+            _menuTree = new MenuTree(new TreeViewState());
+            _menuTree.OnSelect += ChangeCurrentSample;
 
-            if (SODatabaseSettings.Path == string.Empty)
-            {
-                _inSettings = true;
-                tree.AddMenuItemAtPath(new HashSet<OdinMenuItem>(), string.Empty, new OdinMenuItem(tree, "Settings", SODatabaseSettings.Instance));
-                return tree;
-            }
-
-            AddAllAssetsAtPath(tree, SODatabaseSettings.Path, typeof(DataNode));
-            Texture folderIcon = (Texture2D) AssetDatabase.LoadAssetAtPath("Packages/com.nuclearband.sodatabase/Editor/folderIcon.png", typeof(Texture2D));
-            tree.EnumerateTree().AddIcons(odinMenuItem =>
-            {
-                if (odinMenuItem.Value is FolderHolder)
-                {
-                    return folderIcon;
-                }
-
-                var dataNodeType = ((DataNodeHolder) odinMenuItem.Value).DataNode.GetType();
-                if (SODatabaseSettings.Instance.NodeIcons.ContainsKey(dataNodeType))
-                {
-                    return SODatabaseSettings.Instance.NodeIcons[dataNodeType];
-                }
-
-                return null;
-            });
-            tree.SortMenuItemsByName();
-            tree.Selection.SelectionChanged += SelectionChanged;
-            return tree;
+            _searchField = new SearchField();
+            _searchField.downOrUpArrowKeyPressed += _menuTree.SetFocusAndEnsureSelectedItem;
         }
-
-        private void SelectionChanged(SelectionChangedType obj)
+        
+        private void OnDisable()
         {
-            switch (obj)
+            ChangeCurrentSample(null);
+        }
+        
+        
+        private void OnGUI()
+        {
+            using (new GUILayout.HorizontalScope())
             {
-                case SelectionChangedType.ItemAdded:
-                    ((Holder) MenuTree.Selection.SelectedValue).Select();
-                    break;
-                case SelectionChangedType.ItemRemoved:
-                    break;
-                case SelectionChangedType.SelectionCleared:
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(obj), obj, null);
+                using (new GUILayout.VerticalScope(GUILayout.Width(200)))
+                {
+                    DrawMenu();
+                }
+
+                var separatorRect = GUILayoutUtility.GetLastRect();
+                separatorRect.xMin = separatorRect.xMax;
+                separatorRect.xMax += 1;
+                GUI.Box(separatorRect, "");
+
+                using (new GUILayout.VerticalScope())
+                {
+                    DrawElement();
+                }
             }
         }
 
-        private void AddAllAssetsAtPath(
-            OdinMenuTree tree,
-            string assetFolderPath,
-            Type type)
+        private void DrawMenu()
         {
-            var strings = AssetDatabase.GetAllAssetPaths().Where(x => x.StartsWith(assetFolderPath, StringComparison.InvariantCultureIgnoreCase));
-
-            var odinMenuItemSet = new HashSet<OdinMenuItem>();
-            foreach (var str1 in strings)
+            using (new GUILayout.HorizontalScope(EditorStyles.toolbar, GUILayout.ExpandWidth(true)))
             {
-                var asset = AssetDatabase.LoadAssetAtPath(str1, type);
-                var path = string.Empty;
-                string assetName;
-                string str2;
-                if (asset == null)
+                GUILayout.Space(5);
+                _menuTree.searchString = _searchField.OnToolbarGUI(_menuTree.searchString, GUILayout.ExpandWidth(true));
+                GUILayout.Space(5);
+            }
+
+            var menuRect = GUILayoutUtility.GetRect(0, 100000, 0, 100000);
+            _menuTree.OnGUI(menuRect);
+        }
+
+        private void DrawElement()
+        {
+            if (_currentPropertyTree == null)
+            {
+                return;
+            }
+
+            using (var scrollScope = new GUILayout.ScrollViewScope(_currentScroll))
+            {
+                _currentScroll = scrollScope.scrollPosition;
+
+                using (new GUILayout.VerticalScope(SampleWindowStyles.Padding))
                 {
-                    //it's a directory
-                    str2 = str1.Substring(assetFolderPath.Length);
-                    int length = str2.LastIndexOf('/');
-                    if (length == -1)
+                    
+                    _currentSerializedObject.UpdateIfRequiredOrScript();
+                    _currentPropertyTree.Update();
+                    _currentPropertyTree.RunValidationIfRequired();
+
+                    _currentPropertyTree.Draw();
+                    
+
+                    if (_currentSerializedObject.ApplyModifiedProperties())
                     {
-                        path = string.Empty;
-                        assetName = str2;
-                    }
-                    else
-                    {
-                        path = str2[..length];
-                        assetName = str2[(length + 1)..];
+                        _currentPropertyTree.RequestValidation();
                     }
 
-                    if (assetName == string.Empty)
-                        continue;
-                    tree.AddMenuItemAtPath(odinMenuItemSet, path, new OdinMenuItem(tree, assetName, new FolderHolder(path, assetName)));
+                    if (_currentPropertyTree.RepaintRequired)
+                    {
+                        Repaint();
+                    }
 
-                    continue;
+
+                   
                 }
-
-                var withoutExtension = Path.GetFileNameWithoutExtension(str1);
-
-                str2 = (PathUtilities.GetDirectoryName(str1).TrimEnd('/') + "/").Substring(assetFolderPath.Length);
-                if (str2.Length != 0)
-                    path = path.Trim('/') + "/" + str2;
-
-                path = path.Trim('/') + "/" + withoutExtension;
-                SplitMenuPath(path, out path, out assetName);
-                var menuItem = new OdinMenuItem(tree, assetName, new DataNodeHolder(path, assetName, (DataNode) asset));
-                tree.AddMenuItemAtPath(odinMenuItemSet, path, menuItem);
-                AddDragHandles(menuItem);
             }
         }
-
-        private static void SplitMenuPath(string menuPath, out string path, out string name)
+        
+        private void ChangeCurrentSample(Holder holder)
         {
-            menuPath = menuPath.Trim('/');
-
-            int length = menuPath.LastIndexOf('/');
-            if (length == -1)
+            if (_currentPropertyTree != null)
             {
-                path = string.Empty;
-                name = menuPath;
+                _currentPropertyTree.Dispose();
+                _currentPropertyTree = null;
             }
 
-            else
+            _currentScroll = Vector2.zero;
+
+            if (holder != null)
             {
-                path = menuPath.Substring(0, length);
-                name = menuPath.Substring(length + 1);
+                _currentSerializedObject = new SerializedObject((holder as DataNodeHolder)?.DataNode);
+                _currentPropertyTree = new TriPropertyTreeForSerializedObject(_currentSerializedObject);
             }
         }
+        
+       
 
-        protected override void OnBeginDrawEditors()
+        
+
+        
+
+        
+
+        /*protected override void OnBeginDrawEditors()
         {
             if (_inSettings)
             {
@@ -202,8 +199,9 @@ namespace Nuclear.SODatabase.Editor
                 return;
             }
 
-            if (MenuTree == null || MenuTree.Selection == null)
+            if (MenuTree?.Selection == null)
                 return;
+            
             var selected = MenuTree.Selection.FirstOrDefault();
             var toolbarHeight = MenuTree.Config.SearchToolbarHeight;
 
@@ -277,7 +275,33 @@ namespace Nuclear.SODatabase.Editor
         private void AddDragHandles(OdinMenuItem menuItem)
         {
             menuItem.OnDrawItem += _ => DragAndDropUtilities.DragZone(menuItem.Rect, (menuItem.Value as DataNodeHolder)!.DataNode, false, false);
+        }*/
+    }
+    
+    internal static class SampleWindowStyles
+    {
+        public static readonly GUIStyle Padding;
+        public static readonly GUIStyle BoxWithPadding;
+        public static readonly GUIStyle HeaderDisplayNameLabel;
+
+        static SampleWindowStyles()
+        {
+            Padding = new GUIStyle(GUI.skin.label)
+            {
+                padding = new RectOffset(5, 5, 5, 5),
+            };
+
+            BoxWithPadding = new GUIStyle(TriEditorStyles.Box)
+            {
+                padding = new RectOffset(5, 5, 5, 5),
+            };
+
+            HeaderDisplayNameLabel = new GUIStyle(EditorStyles.largeLabel)
+            {
+                fontStyle = FontStyle.Bold,
+                fontSize = 17,
+                margin = new RectOffset(5, 5, 5, 0),
+            };
         }
     }
 }
-#endif

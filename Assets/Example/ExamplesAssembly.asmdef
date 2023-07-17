@@ -2,7 +2,8 @@
     "name": "ExamplesAssembly",
     "rootNamespace": "",
     "references": [
-        "GUID:2aa9b8d1d77cfe24f852a13b837e9c06"
+        "GUID:2aa9b8d1d77cfe24f852a13b837e9c06",
+        "GUID:324caed91501a9c47a04ebfd87b68794"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

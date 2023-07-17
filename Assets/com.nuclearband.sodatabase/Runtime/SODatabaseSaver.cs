@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Threading.Tasks;
 using Newtonsoft.Json;
 using UnityEngine;
 
@@ -46,7 +47,7 @@ namespace Nuclear.SODatabase
             };
         }
 
-        async Awaitable ISODatabaseSaver.SaveAsync()
+        async Task ISODatabaseSaver.SaveAsync()
         {
             if (_saving)
                 return;
@@ -76,7 +77,7 @@ namespace Nuclear.SODatabase
             _saving = false;
         }
 
-        async Awaitable ISODatabaseSaver.LoadAsync()
+        async Task ISODatabaseSaver.LoadAsync()
         {
             if (!File.Exists(SavePath)) {
                 foreach (var dataNode in DataNodes(_root))

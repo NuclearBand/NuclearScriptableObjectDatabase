@@ -22,7 +22,7 @@ namespace Nuclear.SODatabase
             await This.InitAsync(onProgress, onComplete);
 
         // ReSharper disable once MemberCanBePrivate.Global
-        async Awaitable ISODatabase.InitAsync(Action<float>? onProgress, Action? onComplete)
+        async Task ISODatabase.InitAsync(Action<float>? onProgress, Action? onComplete)
         {
             var resourceLocations = await LoadResourceLocations(onProgress);
             _root = new();
@@ -127,12 +127,12 @@ namespace Nuclear.SODatabase
         async void ISODatabase.Save() => await This.SaveAsync();
 
         // ReSharper disable once MemberCanBePrivate.Global
-        async Awaitable ISODatabase.SaveAsync() => await _soDatabaseSaver.SaveAsync();
+        async Task ISODatabase.SaveAsync() => await _soDatabaseSaver.SaveAsync();
 
         async void ISODatabase.Load() => await This.LoadAsync();
 
         // ReSharper disable once MemberCanBePrivate.Global
-        async Awaitable ISODatabase.LoadAsync() => await _soDatabaseSaver.LoadAsync();
+        async Task ISODatabase.LoadAsync() => await _soDatabaseSaver.LoadAsync();
 
         T ISODatabase.GetRuntimeModel<T>(string path, Func<T>? allocator)
         {

@@ -1,10 +1,10 @@
-﻿using UnityEngine;
+﻿using System.Threading.Tasks;
 
 namespace Nuclear.SODatabase
 {
     internal interface ISODatabaseSaver
     {
-        Awaitable SaveAsync();
-        Awaitable LoadAsync();
+        Task SaveAsync();
+        Task LoadAsync();
     }
 }

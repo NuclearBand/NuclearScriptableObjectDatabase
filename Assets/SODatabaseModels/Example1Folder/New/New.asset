@@ -10,43 +10,20 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 62229570489b76540a9ff1d3fa3ce7bd, type: 3}
-  m_Name: Example1
+  m_Name: New
   m_EditorClassIdentifier: 
   serializationData:
     SerializedFormat: 2
     SerializedBytes: 
-    ReferencedUnityObjects:
-    - {fileID: 11400000, guid: 7dd3cfdc035f56b44954578039989c7a, type: 2}
+    ReferencedUnityObjects: []
     SerializedBytesString: 
     Prefab: {fileID: 0}
     PrefabModificationsReferencedUnityObjects: []
     PrefabModifications: []
     SerializationNodes:
     - Name: _interface
-      Entry: 10
-      Data: 0
-    - Name: _iq
       Entry: 6
       Data: 
-    - Name: _iqs2
-      Entry: 7
-      Data: 0|System.Collections.Generic.List`1[[Nuclear.SODatabase.IQ, ExamplesAssembly]],
-        mscorlib
-    - Name: 
-      Entry: 12
-      Data: 0
-    - Name: 
-      Entry: 13
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-  _fullPath: Example1Folder
-  Description: 1
-  DataNode: {fileID: 11400000, guid: 7dd3cfdc035f56b44954578039989c7a, type: 2}
-  _q1:
-    X: 0
-  _iqs:
-  - Y: 
-  - Y: 
-  - Y: 
+  _fullPath: 
+  Description: 
+  DataNode: {fileID: 0}
